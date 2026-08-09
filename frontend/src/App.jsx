@@ -9,7 +9,7 @@ import ConsumerMenu from "./pages/Consumermenu.jsx";
 import SocietyCharges from "./pages/SocietyCharges.jsx";
 import StaffPhoneNumbers from "./pages/Staffphonenumbers.jsx";
 import BillingSchedule from "./pages/Billingschedule.jsx";
-import BillProcessMenu from "./pages/Billprocess,enu.jsx";
+import BillProcessMenu from "./pages/Billprocessmenu.jsx";
 import BillGenerate from "./pages/Billgenerate.jsx";
 import BillPreview from "./pages/Billpreview.jsx";
 import BankInformation from "./pages/Bankinformation.jsx";
