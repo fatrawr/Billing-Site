@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import AuthShell from "../components/AuthShell.jsx";
+import AuthShell from "../components/Authshell.jsx";
 
 export default function Welcome() {
   return (
