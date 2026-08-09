@@ -2,3 +2,6 @@
 /bin
 /Migrations
 /obj
+/node_modules
+/package-lock.json
+/dist
