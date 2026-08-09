@@ -4,21 +4,21 @@ import Welcome from "./pages/Welcome.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Login from "./pages/Login.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
-import MainMenu from "./pages/MainMenu.jsx";
-import ConsumerMenu from "./pages/ConsumerMenu.jsx";
+import MainMenu from "./pages/Mainmenu.jsx";
+import ConsumerMenu from "./pages/Consumermenu.jsx";
 import SocietyCharges from "./pages/SocietyCharges.jsx";
-import StaffPhoneNumbers from "./pages/StaffPhoneNumbers.jsx";
-import BillingSchedule from "./pages/BillingSchedule.jsx";
-import BillProcessMenu from "./pages/BillProcessMenu.jsx";
-import BillGenerate from "./pages/BillGenerate.jsx";
-import BillPreview from "./pages/BillPreview.jsx";
-import BankInformation from "./pages/BankInformation.jsx";
-import ConfigInformation from "./pages/ConfigInformation.jsx";
+import StaffPhoneNumbers from "./pages/Staffphonenumbers.jsx";
+import BillingSchedule from "./pages/Billingschedule.jsx";
+import BillProcessMenu from "./pages/Billprocess,enu.jsx";
+import BillGenerate from "./pages/Billgenerate.jsx";
+import BillPreview from "./pages/Billpreview.jsx";
+import BankInformation from "./pages/Bankinformation.jsx";
+import ConfigInformation from "./pages/Configinformation.jsx";
 import ConsumerAdd from "./pages/ConsumerAdd.jsx";
 import ConsumerUpdate from "./pages/ConsumerUpdate.jsx";
 import ConsumerDisplay from "./pages/ConsumerDisplay.jsx";
-import PaymentEntry from "./pages/PaymentEntry.jsx";
-import ReadingEntry from "./pages/ReadingEntry.jsx";
+import PaymentEntry from "./pages/Paymententry.jsx";
+import ReadingEntry from "./pages/Readingentry.jsx";
 
 //<Route element={<AppShell />}>
 //</Route>
