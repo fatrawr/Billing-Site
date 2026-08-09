@@ -18,7 +18,7 @@ import ConsumerAdd from "./pages/ConsumerAdd.jsx";
 import ConsumerUpdate from "./pages/ConsumerUpdate.jsx";
 import ConsumerDisplay from "./pages/ConsumerDisplay.jsx";
 import PaymentEntry from "./pages/Paymententry.jsx";
-import ReadingEntry from "./pages/Readingentry.jsx";
+import ReadingEntry from "./pages/ReadingEntry.jsx";
 
 //<Route element={<AppShell />}>
 //</Route>
