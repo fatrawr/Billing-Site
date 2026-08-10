@@ -23,6 +23,9 @@ from reading_routes import reading_bp
 
 app = Flask(__name__)
 
+@app.route("/api/debug-origin") 
+def debug_origin(): return jsonify({"frontend_origin": os.environ.get("FRONTEND_ORIGIN", "NOT SET")})
+
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 if not app.secret_key:
     raise RuntimeError("FLASK_SECRET_KEY environment variable is not set")
