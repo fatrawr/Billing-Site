@@ -5,6 +5,8 @@ you create one new *_routes.py blueprint file per form/module and register
 it here. See the bottom of this file for the pattern.
 """
 
+import os
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 
@@ -16,18 +18,15 @@ from bills_routes import bills_bp
 from bank_routes import bank_bp
 from config_routes import config_bp
 from customer_routes import consumers_bp
-from payment_routes import payment_bp        # add as you migrate PaymentEntryForm
-from reading_routes import reading_bp        # add as you migrate EntryForm
+from payment_routes import payment_bp
+from reading_routes import reading_bp
 
 app = Flask(__name__)
-# app.secret_key = "change-this-to-a-real-random-secret-in-production"
-import os
-app.secret_key = os.environ.get("bc8e3ef6fea24d5759cc3b18381aaa5fa75eb3e6160ece3171c9ec1f6d6acff9")
+
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 if not app.secret_key:
     raise RuntimeError("FLASK_SECRET_KEY environment variable is not set")
 
-# allow your frontend's dev origin to send/receive the session cookie
-# CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 CORS(app, supports_credentials=True, origins=[os.environ.get("FRONTEND_ORIGIN", "http://localhost:3000")])
 
 app.register_blueprint(auth_bp, url_prefix="/api")
@@ -40,15 +39,13 @@ app.register_blueprint(config_bp, url_prefix="/api/config")
 app.register_blueprint(consumers_bp, url_prefix="/api/consumers")
 app.register_blueprint(payment_bp, url_prefix="/api/payments")
 app.register_blueprint(reading_bp, url_prefix="/api/readings")
+
 app.config.update(
-    SESSION_COOKIE_SECURE=True,      # only sent over HTTPS
-    SESSION_COOKIE_HTTPONLY=True,    # not readable by JS
-    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="None",
 )
 
-# @app.errorhandler(Exception)
-# def handle_exception(e):
-#     return jsonify({"error": str(e)}), 500
 
 @app.errorhandler(Exception)
 def handle_exception(e):
@@ -57,13 +54,6 @@ def handle_exception(e):
         return jsonify({"error": str(e)}), 500
     return jsonify({"error": "Something went wrong. Please try again."}), 500
 
-# if __name__ == "__main__":
-#     app.run(debug=True, port=5000)
-
 
 if __name__ == "__main__":
-    if os.environ.get("IS_PRODUCTION"):
-        from waitress import serve
-        serve(app, host="0.0.0.0", port=5000)
-    else:
-        app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000)
