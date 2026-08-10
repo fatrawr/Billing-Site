@@ -1,7 +1,4 @@
-//const API_BASE = "http://localhost:5000/api";
-const API_BASE = import.meta.env.PROD
-  ? "https://billing-thingy-9e03mrij9-batman-3508.vercel.app/"
-  : "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
 
 
 async function request(path, options = {}) {
@@ -20,8 +17,8 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  signup: (payload) => request("/signup", { method: "POST", body: payload }),
-  login: (payload) => request("/login", { method: "POST", body: payload }),
+  signup: (payload) => request("signup", { method: "POST", body: payload }),
+  login: (payload) => request("login", { method: "POST", body: payload }),
   forgotPassword: (payload) =>
     request("/forgot-password", { method: "POST", body: payload }),
   logout: () => request("/logout", { method: "POST" }),
