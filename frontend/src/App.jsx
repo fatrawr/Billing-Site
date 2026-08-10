@@ -64,9 +64,9 @@ export default function App() {
         <Routes>
           {/* ── Auth screens: no shared chrome, use AuthShell instead ── */}
           <Route path="/" element={<Welcome />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="signup" element={<SignUp />} />
+          <Route path="login" element={<Login />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
          
           {/* ── Everything else: wrapped in AppShell for shared header ── */}
           
