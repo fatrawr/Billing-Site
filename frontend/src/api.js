@@ -17,7 +17,7 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  signup: (payload) => request("signup", { method: "POST", body: payload }),
+  signup: (payload) => request("/signup", { method: "POST", body: payload }),
   login: (payload) => request("/login", { method: "POST", body: payload }),
   forgotPassword: (payload) =>
     request("/forgot-password", { method: "POST", body: payload }),

@@ -21,11 +21,6 @@ import ConsumerDisplay from "./pages/ConsumerDisplay.jsx";
 import PaymentEntry from "./pages/Paymententry.jsx";
 import ReadingEntry from "./pages/ReadingEntry.jsx";
 
-//<Route element={<AppShell />}>
-//</Route>
-
-//<div className="page">
-//</div>
 const PAGE_TITLES = {
   "/": "",
   "/signup": "Create Account",
@@ -54,8 +49,6 @@ function Shell({ children }) {
   return <AppShell subtitle={PAGE_TITLES[pathname] ?? ""}>{children}</AppShell>;
 }
 
-
-
 export default function App() {
   return (
     <BrowserRouter>
@@ -70,21 +63,21 @@ export default function App() {
          
           {/* ── Everything else: wrapped in AppShell for shared header ── */}
           
-            <Route path="/menu" element={<RequireAuth><Shell><MainMenu /></Shell></RequireAuth>} />
-        <Route path="/menu/consumers" element={<RequireAuth><Shell><ConsumerMenu /></Shell></RequireAuth>} />
-        <Route path="/menu/consumers/add" element={<RequireAuth><Shell><ConsumerAdd /></Shell></RequireAuth>} />
-        <Route path="/menu/consumers/update" element={<RequireAuth><Shell><ConsumerUpdate /></Shell></RequireAuth>} />
-        <Route path="/menu/consumers/browse" element={<RequireAuth><Shell><ConsumerDisplay /></Shell></RequireAuth>} />
-        <Route path="/menu/charges" element={<RequireAuth><Shell><SocietyCharges /></Shell></RequireAuth>} />
-        <Route path="/menu/staff" element={<RequireAuth><Shell><StaffPhoneNumbers /></Shell></RequireAuth>} />
-        <Route path="/menu/dates" element={<RequireAuth><Shell><BillingSchedule /></Shell></RequireAuth>} />
-        <Route path="/menu/bills" element={<RequireAuth><Shell><BillProcessMenu /></Shell></RequireAuth>} />
-        <Route path="/menu/bills/generate" element={<RequireAuth><Shell><BillGenerate /></Shell></RequireAuth>} />
-        <Route path="/menu/bills/preview" element={<RequireAuth><Shell><BillPreview /></Shell></RequireAuth>} />
-        <Route path="/menu/bills/payment-entry" element={<RequireAuth><Shell><PaymentEntry /></Shell></RequireAuth>} />
-        <Route path="/menu/bills/reading-entry" element={<RequireAuth><Shell><ReadingEntry /></Shell></RequireAuth>} />
-        <Route path="/menu/bank" element={<RequireAuth><Shell><BankInformation /></Shell></RequireAuth>} />
-        <Route path="/menu/config" element={<RequireAuth><Shell><ConfigInformation /></Shell></RequireAuth>} />
+            <Route path="menu" element={<RequireAuth><Shell><MainMenu /></Shell></RequireAuth>} />
+        <Route path="menu/consumers" element={<RequireAuth><Shell><ConsumerMenu /></Shell></RequireAuth>} />
+        <Route path="menu/consumers/add" element={<RequireAuth><Shell><ConsumerAdd /></Shell></RequireAuth>} />
+        <Route path="menu/consumers/update" element={<RequireAuth><Shell><ConsumerUpdate /></Shell></RequireAuth>} />
+        <Route path="menu/consumers/browse" element={<RequireAuth><Shell><ConsumerDisplay /></Shell></RequireAuth>} />
+        <Route path="menu/charges" element={<RequireAuth><Shell><SocietyCharges /></Shell></RequireAuth>} />
+        <Route path="menu/staff" element={<RequireAuth><Shell><StaffPhoneNumbers /></Shell></RequireAuth>} />
+        <Route path="menu/dates" element={<RequireAuth><Shell><BillingSchedule /></Shell></RequireAuth>} />
+        <Route path="menu/bills" element={<RequireAuth><Shell><BillProcessMenu /></Shell></RequireAuth>} />
+        <Route path="menu/bills/generate" element={<RequireAuth><Shell><BillGenerate /></Shell></RequireAuth>} />
+        <Route path="menu/bills/preview" element={<RequireAuth><Shell><BillPreview /></Shell></RequireAuth>} />
+        <Route path="menu/bills/payment-entry" element={<RequireAuth><Shell><PaymentEntry /></Shell></RequireAuth>} />
+        <Route path="menu/bills/reading-entry" element={<RequireAuth><Shell><ReadingEntry /></Shell></RequireAuth>} />
+        <Route path="menu/bank" element={<RequireAuth><Shell><BankInformation /></Shell></RequireAuth>} />
+        <Route path="menu/config" element={<RequireAuth><Shell><ConfigInformation /></Shell></RequireAuth>} />
    
           
         </Routes>
