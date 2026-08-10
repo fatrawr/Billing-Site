@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, useLocation, RequireAuth  } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation,  } from "react-router-dom";
 import AppShell from "./components/AppShell.jsx";
+import RequireAuth from "./components/RequireAuth.jsx";
 import Welcome from "./pages/Welcome.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Login from "./pages/Login.jsx";
