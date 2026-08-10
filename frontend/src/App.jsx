@@ -69,25 +69,21 @@ export default function App() {
          
           {/* ── Everything else: wrapped in AppShell for shared header ── */}
           
-            <Route path="/" element={<Welcome />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/menu" element={<MainMenu />} />
-          <Route path="/menu/consumers" element={<ConsumerMenu />} />
-          <Route path="/menu/consumers/add" element={<ConsumerAdd />} />
-          <Route path="/menu/consumers/update" element={<ConsumerUpdate />} />
-          <Route path="/menu/consumers/browse" element={<ConsumerDisplay />} />
-          <Route path="/menu/charges" element={<SocietyCharges />} />
-          <Route path="/menu/staff" element={<StaffPhoneNumbers />} />
-          <Route path="/menu/dates" element={<BillingSchedule />} />
-          <Route path="/menu/bills" element={<BillProcessMenu />} />
-          <Route path="/menu/bills/generate" element={<BillGenerate />} />
-          <Route path="/menu/bills/preview" element={<BillPreview />} />
-          <Route path="/menu/bills/payment-entry" element={<PaymentEntry />} />
-          <Route path="/menu/bills/reading-entry" element={<ReadingEntry />} />
-          <Route path="/menu/bank" element={<BankInformation />} />
-          <Route path="/menu/config" element={<ConfigInformation />} />
+            <Route path="/menu" element={<RequireAuth><Shell><MainMenu /></Shell></RequireAuth>} />
+        <Route path="/menu/consumers" element={<RequireAuth><Shell><ConsumerMenu /></Shell></RequireAuth>} />
+        <Route path="/menu/consumers/add" element={<RequireAuth><Shell><ConsumerAdd /></Shell></RequireAuth>} />
+        <Route path="/menu/consumers/update" element={<RequireAuth><Shell><ConsumerUpdate /></Shell></RequireAuth>} />
+        <Route path="/menu/consumers/browse" element={<RequireAuth><Shell><ConsumerDisplay /></Shell></RequireAuth>} />
+        <Route path="/menu/charges" element={<RequireAuth><Shell><SocietyCharges /></Shell></RequireAuth>} />
+        <Route path="/menu/staff" element={<RequireAuth><Shell><StaffPhoneNumbers /></Shell></RequireAuth>} />
+        <Route path="/menu/dates" element={<RequireAuth><Shell><BillingSchedule /></Shell></RequireAuth>} />
+        <Route path="/menu/bills" element={<RequireAuth><Shell><BillProcessMenu /></Shell></RequireAuth>} />
+        <Route path="/menu/bills/generate" element={<RequireAuth><Shell><BillGenerate /></Shell></RequireAuth>} />
+        <Route path="/menu/bills/preview" element={<RequireAuth><Shell><BillPreview /></Shell></RequireAuth>} />
+        <Route path="/menu/bills/payment-entry" element={<RequireAuth><Shell><PaymentEntry /></Shell></RequireAuth>} />
+        <Route path="/menu/bills/reading-entry" element={<RequireAuth><Shell><ReadingEntry /></Shell></RequireAuth>} />
+        <Route path="/menu/bank" element={<RequireAuth><Shell><BankInformation /></Shell></RequireAuth>} />
+        <Route path="/menu/config" element={<RequireAuth><Shell><ConfigInformation /></Shell></RequireAuth>} />
    
           
         </Routes>
@@ -97,54 +93,28 @@ export default function App() {
   );
 }
 
-
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Welcome from "./pages/Welcome.jsx";
-// import SignUp from "./pages/SignUp.jsx";
-// import Login from "./pages/Login.jsx";
-// import ForgotPassword from "./pages/ForgotPassword.jsx";
-// import MainMenu from "./pages/MainMenu.jsx";
-// import ConsumerMenu from "./pages/ConsumerMenu.jsx";
-// import SocietyCharges from "./pages/SocietyCharges.jsx";
-// import StaffPhoneNumbers from "./pages/StaffPhoneNumbers.jsx";
-// import BillingSchedule from "./pages/BillingSchedule.jsx";
-// import BillProcessMenu from "./pages/BillProcessMenu.jsx";
-// import BillGenerate from "./pages/BillGenerate.jsx";
-// import BillPreview from "./pages/BillPreview.jsx";
-// import BankInformation from "./pages/BankInformation.jsx";
-// import ConfigInformation from "./pages/ConfigInformation.jsx";
-// import ConsumerAdd from "./pages/ConsumerAdd.jsx";
-// import ConsumerUpdate from "./pages/ConsumerUpdate.jsx";
-// import ConsumerDisplay from "./pages/ConsumerDisplay.jsx";
-// import PaymentEntry from "./pages/PaymentEntry.jsx";
-// import ReadingEntry from "./pages/ReadingEntry.jsx";
-
-// export default function App() {
-//   return (
-//     <BrowserRouter>
-//       <div className="page">
-//         <Routes>
-//           <Route path="/" element={<Welcome />} />
-//           <Route path="/signup" element={<SignUp />} />
-//           <Route path="/login" element={<Login />} />
-//           <Route path="/forgot-password" element={<ForgotPassword />} />
-//           <Route path="/menu" element={<MainMenu />} />
-//           <Route path="/menu/consumers" element={<ConsumerMenu />} />
-//           <Route path="/menu/consumers/add" element={<ConsumerAdd />} />
-//           <Route path="/menu/consumers/update" element={<ConsumerUpdate />} />
-//           <Route path="/menu/consumers/browse" element={<ConsumerDisplay />} />
-//           <Route path="/menu/charges" element={<SocietyCharges />} />
-//           <Route path="/menu/staff" element={<StaffPhoneNumbers />} />
-//           <Route path="/menu/dates" element={<BillingSchedule />} />
-//           <Route path="/menu/bills" element={<BillProcessMenu />} />
-//           <Route path="/menu/bills/generate" element={<BillGenerate />} />
-//           <Route path="/menu/bills/preview" element={<BillPreview />} />
-//           <Route path="/menu/bills/payment-entry" element={<PaymentEntry />} />
-//           <Route path="/menu/bills/reading-entry" element={<ReadingEntry />} />
-//           <Route path="/menu/bank" element={<BankInformation />} />
-//           <Route path="/menu/config" element={<ConfigInformation />} />
-//         </Routes>
-//       </div>
-//     </BrowserRouter>
-//   );
-// }
+    // <BrowserRouter>
+    //   <div className="page">
+    //     <Routes>
+    //       <Route path="/" element={<Welcome />} />
+    //       <Route path="/signup" element={<SignUp />} />
+    //       <Route path="/login" element={<Login />} />
+    //       <Route path="/forgot-password" element={<ForgotPassword />} />
+    //       <Route path="/menu" element={<MainMenu />} />
+    //       <Route path="/menu/consumers" element={<ConsumerMenu />} />
+    //       <Route path="/menu/consumers/add" element={<ConsumerAdd />} />
+    //       <Route path="/menu/consumers/update" element={<ConsumerUpdate />} />
+    //       <Route path="/menu/consumers/browse" element={<ConsumerDisplay />} />
+    //       <Route path="/menu/charges" element={<SocietyCharges />} />
+    //       <Route path="/menu/staff" element={<StaffPhoneNumbers />} />
+    //       <Route path="/menu/dates" element={<BillingSchedule />} />
+    //       <Route path="/menu/bills" element={<BillProcessMenu />} />
+    //       <Route path="/menu/bills/generate" element={<BillGenerate />} />
+    //       <Route path="/menu/bills/preview" element={<BillPreview />} />
+    //       <Route path="/menu/bills/payment-entry" element={<PaymentEntry />} />
+    //       <Route path="/menu/bills/reading-entry" element={<ReadingEntry />} />
+    //       <Route path="/menu/bank" element={<BankInformation />} />
+    //       <Route path="/menu/config" element={<ConfigInformation />} />
+    //     </Routes>
+    //   </div>
+    // </BrowserRouter>

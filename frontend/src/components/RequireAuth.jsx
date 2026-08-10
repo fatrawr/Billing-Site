@@ -1,13 +1,45 @@
+// import { useEffect, useState } from "react";
+// import { Navigate, useLocation } from "react-router-dom";
+// import { api } from "../api.js";
+
+// export default function RequireAuth({ children }) {
+//   const [status, setStatus] = useState("checking"); // "checking" | "allowed" | "denied"
+//   const location = useLocation();
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     api.me()
+//       .then(() => { if (!cancelled) setStatus("allowed"); })
+//       .catch(() => { if (!cancelled) setStatus("denied"); });
+//     return () => { cancelled = true; };
+//   }, [location.pathname]);
+
+//   if (status === "checking") {
+//     return (
+//       <div className="dashboard dashboard--narrow">
+//         <p className="dashboard__subtitle">Checking session…</p>
+//       </div>
+//     );
+//   }
+
+//   if (status === "denied") {
+//     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+//   }
+
+//   return children;
+// }
+
 import { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { api } from "../api.js";
 
 export default function RequireAuth({ children }) {
-  const [status, setStatus] = useState("checking"); // "checking" | "allowed" | "denied"
+  const [status, setStatus] = useState("checking");
   const location = useLocation();
 
   useEffect(() => {
     let cancelled = false;
+    setStatus("checking");
     api.me()
       .then(() => { if (!cancelled) setStatus("allowed"); })
       .catch(() => { if (!cancelled) setStatus("denied"); });
@@ -15,16 +47,10 @@ export default function RequireAuth({ children }) {
   }, [location.pathname]);
 
   if (status === "checking") {
-    return (
-      <div className="dashboard dashboard--narrow">
-        <p className="dashboard__subtitle">Checking session…</p>
-      </div>
-    );
+    return <div style={{ padding: 40, textAlign: "center" }}>Checking session…</div>;
   }
-
   if (status === "denied") {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/login" replace />;
   }
-
   return children;
 }
