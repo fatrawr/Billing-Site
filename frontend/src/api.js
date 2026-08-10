@@ -1,4 +1,8 @@
-const API_BASE = "http://localhost:5000/api";
+//const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.PROD
+  ? "https://billing-thingy-9e03mrij9-batman-3508.vercel.app/"
+  : "http://localhost:5000/api";
+
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
