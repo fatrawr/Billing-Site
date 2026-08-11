@@ -95,7 +95,8 @@ def signup():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json(silent=True) or {}
-    user_id  = (data.get("userId") or "").strip()
+    # Must match signup, which stores UserID in lowercase
+    user_id  = (data.get("userId") or "").strip().lower()
     password = data.get("password") or ""
 
     if not user_id or not password:
@@ -125,7 +126,8 @@ def login():
 @auth_bp.route("/forgot-password", methods=["POST"])
 def forgot_password():
     data = request.get_json(silent=True) or {}
-    user_id = (data.get("userId") or "").strip()
+    # Must match signup, which stores UserID in lowercase
+    user_id = (data.get("userId") or "").strip().lower()
     new_pw  = data.get("newPassword") or ""
     confirm = data.get("confirmPassword") or ""
 
