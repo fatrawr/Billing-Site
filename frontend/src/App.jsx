@@ -52,15 +52,18 @@ function Shell({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Auth screens: no shared chrome, use AuthShell instead */}
-        <Route path="/" element={<Welcome />} />
-        <Route path="signup" element={<SignUp />} />
-        <Route path="login" element={<Login />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-
-        {/* Everything else: wrapped in AppShell for shared header */}
-        <Route path="menu" element={<RequireAuth><Shell><MainMenu /></Shell></RequireAuth>} />
+     <Shell>
+      
+        <Routes>
+          {/* ── Auth screens: no shared chrome, use AuthShell instead ── */}
+          <Route path="/" element={<Welcome />} />
+          <Route path="signup" element={<SignUp />} />
+          <Route path="login" element={<Login />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+         
+          {/* ── Everything else: wrapped in AppShell for shared header ── */}
+          
+            <Route path="menu" element={<RequireAuth><MainMenu /></RequireAuth>} />
         <Route path="menu/consumers" element={<RequireAuth><Shell><ConsumerMenu /></Shell></RequireAuth>} />
         <Route path="menu/consumers/add" element={<RequireAuth><Shell><ConsumerAdd /></Shell></RequireAuth>} />
         <Route path="menu/consumers/update" element={<RequireAuth><Shell><ConsumerUpdate /></Shell></RequireAuth>} />
@@ -75,7 +78,11 @@ export default function App() {
         <Route path="menu/bills/reading-entry" element={<RequireAuth><Shell><ReadingEntry /></Shell></RequireAuth>} />
         <Route path="menu/bank" element={<RequireAuth><Shell><BankInformation /></Shell></RequireAuth>} />
         <Route path="menu/config" element={<RequireAuth><Shell><ConfigInformation /></Shell></RequireAuth>} />
-      </Routes>
+   
+          
+        </Routes>
+      
+      </Shell>
     </BrowserRouter>
   );
 }
