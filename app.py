@@ -20,6 +20,7 @@ from config_routes import config_bp
 from customer_routes import consumers_bp
 from payment_routes import payment_bp
 from reading_routes import reading_bp
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 
@@ -59,10 +60,20 @@ app.config.update(
 
 @app.errorhandler(Exception)
 def handle_exception(e):
+    if isinstance(e, HTTPException):
+        return e  # let Flask/Werkzeug handle its own 404/405/etc. normally
     app.logger.exception("Unhandled error")
     if app.debug:
         return jsonify({"error": str(e)}), 500
     return jsonify({"error": "Something went wrong. Please try again."}), 500
+
+
+# @app.errorhandler(Exception)
+# def handle_exception(e):
+#     app.logger.exception("Unhandled error")
+#     if app.debug:
+#         return jsonify({"error": str(e)}), 500
+#     return jsonify({"error": "Something went wrong. Please try again."}), 500
 
 
 if __name__ == "__main__":
