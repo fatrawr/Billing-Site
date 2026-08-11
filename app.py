@@ -27,7 +27,17 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 if not app.secret_key:
     raise RuntimeError("FLASK_SECRET_KEY environment variable is not set")
 
-CORS(app, supports_credentials=True, origins=[os.environ.get("FRONTEND_ORIGIN", "https://billing-thingy-b7b5-ten.vercel.app")])
+CORS(
+    app,
+    supports_credentials=True,
+    origins=[os.environ.get("FRONTEND_ORIGIN", "https://billing-thingy-b7b5-ten.vercel.app")],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type"],
+)
+
+@app.route("/api/<path:path>", methods=["OPTIONS"])
+def handle_options(path):
+    return "", 204
 
 app.register_blueprint(auth_bp, url_prefix="/api")
 app.register_blueprint(charges_bp, url_prefix="/api/charges")
