@@ -98,6 +98,27 @@ app.register_blueprint(consumers_bp, url_prefix="/api/consumers")
 app.register_blueprint(payment_bp, url_prefix="/api/payments")
 app.register_blueprint(reading_bp, url_prefix="/api/readings")
 
+# Ensure schema exists on cold start (no-op if tables already present)
+try:
+    from database import ensure_tables
+
+    ensure_tables()
+except Exception:
+    app.logger.exception("DB table ensure failed at startup")
+
+
+@app.route("/api/health")
+def health():
+    try:
+        from database import db_ping
+
+        db_ping()
+        return jsonify({"ok": True, "db": "up"}), 200
+    except Exception as e:
+        # Help diagnose prod 500s without dumping secrets
+        return jsonify({"ok": False, "db": "down", "error": type(e).__name__, "detail": str(e)[:300]}), 500
+
+
 # Secure cookies for HTTPS (Vercel). For local http://, cookies still work without Secure.
 _is_prod = os.environ.get("VERCEL") == "1" or os.environ.get("FLASK_ENV") == "production"
 app.config.update(
@@ -112,8 +133,9 @@ def handle_exception(e):
     if isinstance(e, HTTPException):
         return e  # let Flask/Werkzeug handle its own 404/405/etc. normally
     app.logger.exception("Unhandled error")
-    if app.debug:
-        return jsonify({"error": str(e)}), 500
+    # Set SHOW_ERRORS=1 on Vercel temporarily to see real failure reason in the response
+    if app.debug or os.environ.get("SHOW_ERRORS") == "1":
+        return jsonify({"error": str(e), "type": type(e).__name__}), 500
     return jsonify({"error": "Something went wrong. Please try again."}), 500
 
 
