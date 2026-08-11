@@ -7,7 +7,7 @@ it here. See the bottom of this file for the pattern.
 
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS
 
 from auth_routes import auth_bp
@@ -28,17 +28,64 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 if not app.secret_key:
     raise RuntimeError("FLASK_SECRET_KEY environment variable is not set")
 
+
+def _normalize_origin(origin: str) -> str:
+    """Ensure origins are full URLs (scheme + host). Browsers always send that form."""
+    origin = (origin or "").strip().rstrip("/")
+    if not origin:
+        return ""
+    if origin.startswith("http://") or origin.startswith("https://"):
+        return origin
+    return f"https://{origin}"
+
+
+def _allowed_origins():
+    raw = os.environ.get(
+        "FRONTEND_ORIGIN",
+        "https://billing-thingy-b7b5-ten.vercel.app",
+    )
+    origins = [_normalize_origin(part) for part in raw.split(",")]
+    origins = [o for o in origins if o]
+    # Local Vite/React always allowed when not running on Vercel
+    if os.environ.get("VERCEL") != "1":
+        for local in ("http://localhost:3000", "http://127.0.0.1:3000"):
+            if local not in origins:
+                origins.append(local)
+    return origins
+
+
+ALLOWED_ORIGINS = _allowed_origins()
+
 CORS(
     app,
     supports_credentials=True,
-    origins=[os.environ.get("FRONTEND_ORIGIN", "https://billing-thingy-b7b5-ten.vercel.app")],
+    origins=ALLOWED_ORIGINS,
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type"],
 )
 
+
+def _apply_cors_headers(response):
+    origin = request.headers.get("Origin")
+    if origin and origin in ALLOWED_ORIGINS:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        response.headers["Vary"] = "Origin"
+    return response
+
+
+@app.after_request
+def add_cors_headers(response):
+    return _apply_cors_headers(response)
+
+
 @app.route("/api/<path:path>", methods=["OPTIONS"])
 def handle_options(path):
-    return "", 204
+    # Explicit preflight response so browsers always get CORS headers
+    return _apply_cors_headers(make_response("", 204))
+
 
 app.register_blueprint(auth_bp, url_prefix="/api")
 app.register_blueprint(charges_bp, url_prefix="/api/charges")
@@ -51,10 +98,12 @@ app.register_blueprint(consumers_bp, url_prefix="/api/consumers")
 app.register_blueprint(payment_bp, url_prefix="/api/payments")
 app.register_blueprint(reading_bp, url_prefix="/api/readings")
 
+# Secure cookies for HTTPS (Vercel). For local http://, cookies still work without Secure.
+_is_prod = os.environ.get("VERCEL") == "1" or os.environ.get("FLASK_ENV") == "production"
 app.config.update(
-    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SECURE=_is_prod,
     SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SAMESITE="None" if _is_prod else "Lax",
 )
 
 
