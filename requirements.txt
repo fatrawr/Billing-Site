@@ -5,3 +5,5 @@ pyodbc==5.1.0
 bcrypt==4.2.0
 psycopg2-binary
 waitress
+email-validator
+resend
