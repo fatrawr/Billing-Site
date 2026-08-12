@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../componenets/AuthContext.jsx";
+import { useAuth } from "../components/AuthContext.jsx";
 import { api } from "../api.js";
 
 const EMPTY_AMOUNTS = { "2K": "", "1K": "", "10M": "" };
