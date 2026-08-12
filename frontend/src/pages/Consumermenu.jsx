@@ -21,7 +21,7 @@ export default function ConsumerMenu() {
     const onKey = (e) => {
       const item = ITEMS.find((i) => e.key === String(i.number));
       if (item) navigate(item.to);
-      if (e.key === "F10" || e.key === "Escape") {
+      if (e.key === "F10" ) {
         e.preventDefault();
         navigate("/menu");
       }
@@ -45,7 +45,7 @@ export default function ConsumerMenu() {
 
       <div className="dashboard__footer">
         <button type="button" className="btn btn-secondary btn-exit" onClick={() => navigate("/menu")}>
-          Back&nbsp;&nbsp;<span className="btn-exit__key">Esc</span>
+          Back&nbsp;&nbsp;<span className="btn-exit__key">F10</span>
         </button>
       </div>
     </div>
