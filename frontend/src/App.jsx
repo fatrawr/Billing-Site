@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation,  } from "react-router-dom";
-import { AuthProvider } from "./components/AuthProvider.jsx";
+import { AuthProvider } from "./components/AuthContext.jsx";
 import AppShell from "./components/AppShell.jsx";
 import RequireAuth from "./components/RequireAuth.jsx";
 import Welcome from "./pages/Welcome.jsx";
@@ -52,7 +52,6 @@ function Shell({ children }) {
 
 export default function App() {
   return (
-    <AuthProvider>
     <BrowserRouter>
      <Shell>
       
@@ -64,29 +63,28 @@ export default function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
          
           {/* ── Everything else: wrapped in AppShell for shared header ── */}
-          
-            <Route path="menu" element={<RequireAuth><MainMenu /></RequireAuth>} />
-        <Route path="menu/consumers" element={<RequireAuth><ConsumerMenu /></RequireAuth>} />
-        <Route path="menu/consumers/add" element={<RequireAuth><ConsumerAdd /></RequireAuth>} />
-        <Route path="menu/consumers/update" element={<RequireAuth><ConsumerUpdate /></RequireAuth>} />
-        <Route path="menu/consumers/browse" element={<RequireAuth><ConsumerDisplay /></RequireAuth>} />
-        <Route path="menu/charges" element={<RequireAuth><SocietyCharges /></RequireAuth>} />
-        <Route path="menu/staff" element={<RequireAuth><StaffPhoneNumbers /></RequireAuth>} />
-        <Route path="menu/dates" element={<RequireAuth><BillingSchedule /></RequireAuth>} />
-        <Route path="menu/bills" element={<RequireAuth><BillProcessMenu /></RequireAuth>} />
-        <Route path="menu/bills/generate" element={<RequireAuth><BillGenerate /></RequireAuth>} />
-        <Route path="menu/bills/preview" element={<RequireAuth><BillPreview /></RequireAuth>} />
-        <Route path="menu/bills/payment-entry" element={<RequireAuth><PaymentEntry /></RequireAuth>} />
-        <Route path="menu/bills/reading-entry" element={<RequireAuth><ReadingEntry /></RequireAuth>} />
-        <Route path="menu/bank" element={<RequireAuth><BankInformation /></RequireAuth>} />
-        <Route path="menu/config" element={<RequireAuth><ConfigInformation /></RequireAuth>} />
-   
+          <Route element={<RequireAuth />}>
+        <Route path="menu" element={<MainMenu />} />
+        <Route path="menu/consumers" element={<ConsumerMenu />} />
+        <Route path="menu/consumers/add" element={<ConsumerAdd />} />
+        <Route path="menu/consumers/update" element={<ConsumerUpdate />} />
+        <Route path="menu/consumers/browse" element={<ConsumerDisplay />} />
+        <Route path="menu/charges" element={<SocietyCharges />} />
+        <Route path="menu/staff" element={<StaffPhoneNumbers />} />
+        <Route path="menu/dates" element={<BillingSchedule />} />
+        <Route path="menu/bills" element={<BillProcessMenu />} />
+        <Route path="menu/bills/generate" element={<BillGenerate />} />
+        <Route path="menu/bills/preview" element={<BillPreview />} />
+        <Route path="menu/bills/payment-entry" element={<PaymentEntry />} />
+        <Route path="menu/bills/reading-entry" element={<ReadingEntry />} />
+        <Route path="menu/bank" element={<BankInformation />} />
+        <Route path="menu/config" element={<ConfigInformation />} />
+        </Route>
           
         </Routes>
       
       </Shell>
     </BrowserRouter>
-    </AuthProvider>
   );
 }
 

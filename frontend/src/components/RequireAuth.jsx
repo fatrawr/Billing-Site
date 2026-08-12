@@ -1,15 +1,14 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../components/AuthProvider.jsx";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
-export default function RequireAuth({ children }) {
+export default function RequireAuth() {
   const { status } = useAuth();
-  const location = useLocation();
 
   if (status === "checking") {
-    return <div style={{ padding: 40, textAlign: "center" }}>Checking session…</div>;
+    return <div className="dashboard dashboard--narrow"><p className="dashboard__subtitle">Checking session…</p></div>;
   }
-  if (status === "denied") {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (status === "guest") {
+    return <Navigate to="/login" replace />;
   }
-  return children;
+  return <Outlet />;
 }

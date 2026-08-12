@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api.js";
 import AuthShell from "../components/Authshell.jsx";
-import { useAuth } from "../components/AuthProvider.jsx";
+import { useAuth } from "../components/AuthContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -10,6 +10,7 @@ export default function Login() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { refresh } = useAuth();
 
   const submit = async (e) => {
     e.preventDefault();
@@ -23,6 +24,7 @@ export default function Login() {
     try {
       await api.login({ userId: userId.trim(), password });
       setStatus("allowed"); // cache auth state so RequireAuth doesn't re-check
+      await refresh();
       navigate("/menu");
     } catch (err) {
       setError(err.message);
