@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, useLocation,  } from "react-router-dom";
-import { AuthProvider } from "./components/AuthContext.jsx";
 import AppShell from "./components/AppShell.jsx";
 import RequireAuth from "./components/RequireAuth.jsx";
 import Welcome from "./pages/Welcome.jsx";
