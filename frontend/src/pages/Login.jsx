@@ -6,7 +6,6 @@ import { useAuth } from "../components/AuthContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setStatus } = useAuth();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +22,6 @@ export default function Login() {
 
     try {
       await api.login({ userId: userId.trim(), password });
-      setStatus("allowed"); // cache auth state so RequireAuth doesn't re-check
       await refresh(); // refresh user info
       navigate("/menu");
     } catch (err) {
