@@ -10,7 +10,7 @@ from datetime import date
 
 from flask import Blueprint, jsonify, request
 
-from auth_utils import login_required
+from auth_utils import admin_required, login_required
 from database import SessionLocal
 from models import (
     BankInfoTbl, ConfigTbl, ConsumerTbl, DatesTbl, MasterTbl,
@@ -168,7 +168,7 @@ def _build_payload(db, ref_no, month, silent=False):
 
 
 @bills_bp.route("/preview", methods=["GET"])
-@login_required
+@admin_required
 def preview_bills():
     month_str = request.args.get("month", "")
     from_ref = request.args.get("from", "")

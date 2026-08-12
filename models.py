@@ -11,7 +11,8 @@ class SignUpTbl(Base):
     Name       = Column(String(30), nullable=False)
     Email      = Column(String(100), nullable=False)
     Department = Column(String(50), nullable=False)
-    Password   = Column(String(200), nullable=False)   # bcrypt hash, same format as BCrypt.Net
+    Password   = Column(String(200), nullable=False)
+    Role = Column(String(10), nullable=False, default="User")   # bcrypt hash, same format as BCrypt.Net
     Date       = Column(Date, nullable=False)
     Time       = Column(Time, nullable=False)
 
@@ -31,6 +32,14 @@ class PasswordResetTbl(Base):
     ExpiresAt  = Column(DateTime, nullable=True)
     ResetToken = Column(String(64), nullable=True)
     Verified   = Column(Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            "userId": self.UserID, "name": self.Name, "email": self.Email,
+            "department": self.Department, "role": self.Role,
+            "date": self.Date.isoformat() if self.Date else None,
+        }
+
 
 class ConsumerTbl(Base):
     """Maps onto Consumer_Tbl. Columns inferred from BillForm.cs/BillRender.cs usage

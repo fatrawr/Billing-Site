@@ -7,7 +7,7 @@ from datetime import datetime
 
 from flask import Blueprint, jsonify, request, session
 
-from auth_utils import login_required
+from auth_utils import admin_required
 from database import SessionLocal
 from models import StaffPhoneTbl
 
@@ -44,7 +44,7 @@ def list_staff():
 # POST /api/staff   — equivalent of SaveRecord()
 # ══════════════════════════════════════════════════════════════
 @staff_bp.route("", methods=["POST"])
-@login_required
+@admin_required
 def add_staff():
     data = request.get_json(silent=True) or {}
     name = (data.get("staffName") or "").strip()
@@ -72,7 +72,7 @@ def add_staff():
 # body: { id, staffName, phoneNumber }
 # ══════════════════════════════════════════════════════════════
 @staff_bp.route("", methods=["PUT"])
-@login_required
+@admin_required
 def update_staff():
     data = request.get_json(silent=True) or {}
     record_id = data.get("id")
@@ -106,7 +106,7 @@ def update_staff():
 # body: { id }
 # ══════════════════════════════════════════════════════════════
 @staff_bp.route("", methods=["DELETE"])
-@login_required
+@admin_required
 def delete_staff():
     data = request.get_json(silent=True) or {}
     record_id = data.get("id")

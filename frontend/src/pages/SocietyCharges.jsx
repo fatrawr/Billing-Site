@@ -18,6 +18,7 @@ export default function SocietyCharges() {
 
   const [editingDesc, setEditingDesc] = useState(null);
   const [editAmounts, setEditAmounts] = useState(EMPTY_AMOUNTS);
+  const { isAdmin } = useAuth();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -162,8 +163,12 @@ export default function SocietyCharges() {
                   <span>{row["1K"] || "—"}</span>
                   <span>{row["10M"] || "—"}</span>
                   <span className="charges-row__actions">
-                    <button className="btn-chip btn-chip--update" onClick={() => startEdit(row)}>Update</button>
-                    <button className="btn-chip btn-chip--delete" onClick={() => removeCharge(row.description)}>Delete</button>
+                    {isAdmin && (
+                      <button className="btn-chip btn-chip--update" onClick={() => startEdit(row)}>Update</button>
+                    )}
+                    {isAdmin && (
+                      <button className="btn-chip btn-chip--delete" onClick={() => removeCharge(row.description)}>Delete</button>
+                    )}
                   </span>
                 </>
               )}

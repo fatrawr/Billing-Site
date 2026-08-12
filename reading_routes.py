@@ -8,7 +8,7 @@ from datetime import datetime
 
 from flask import Blueprint, jsonify, request, session
 
-from auth_utils import login_required
+from auth_utils import admin_required, login_required
 from database import SessionLocal
 from models import ConfigTbl, ConsumerTbl, MasterTbl, MeterDetailTbl, ReadingTbl, SoctyChargsTbl
 
@@ -58,7 +58,7 @@ def _generate_curr_rdg(prev_rdg):
 # POST /api/readings/reset — port of ReadingResetHelper + ReadingSeederLogic.Seed
 # ══════════════════════════════════════════════════════════════
 @reading_bp.route("/reset", methods=["POST"])
-@login_required
+@admin_required
 def reset_readings():
     """Confirmation dialog lives on the frontend (window.confirm) before this
     is ever called - same as the C# MessageBox.Show Yes/No gate."""
@@ -122,7 +122,7 @@ def reset_readings():
 # POST /api/readings/post — port of ReadingPostingHelper.PostReadings
 # ══════════════════════════════════════════════════════════════
 @reading_bp.route("/post", methods=["POST"])
-@login_required
+@admin_required
 def post_readings():
     """NOTE: the C# GetConfigValue filters Config_Tbl by an EXACT month match
     (c.Month == month), despite its own docstring saying '<=, most recent
@@ -244,7 +244,7 @@ def post_readings():
 # Reading Entry screen endpoints — web equivalent of ReadingForm.cs
 # ══════════════════════════════════════════════════════════════
 @reading_bp.route("/entry/init", methods=["GET"])
-@login_required
+@admin_required
 def reading_entry_init():
     db = SessionLocal()
     try:
@@ -268,7 +268,7 @@ def reading_entry_init():
 
 
 @reading_bp.route("/entry/<int:ref_no>", methods=["GET"])
-@login_required
+@admin_required
 def reading_entry_get(ref_no):
     db = SessionLocal()
     try:
@@ -294,7 +294,7 @@ def reading_entry_get(ref_no):
 
 
 @reading_bp.route("/entry/<int:ref_no>", methods=["PUT"])
-@login_required
+@admin_required
 def reading_entry_save(ref_no):
     data = request.get_json(silent=True) or {}
     try:

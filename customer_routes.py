@@ -27,7 +27,7 @@ from flask import Blueprint, jsonify, request, session
 
 from sqlalchemy.exc import IntegrityError
 
-from auth_utils import login_required
+from auth_utils import admin_required, login_required
 from database import SessionLocal
 from models import ConsumerTbl, MeterDetailTbl
 
@@ -63,7 +63,7 @@ def _parse_strict_date(value):
 # so no RESIDENTIAL_DISPLAY_TO_CODE lookup is needed here.
 # ══════════════════════════════════════════════════════════════
 @consumers_bp.route("", methods=["POST"])
-@login_required
+@admin_required
 def add_consumer():
     data = request.get_json(silent=True) or {}
 
@@ -245,7 +245,7 @@ def get_consumer(ref_no):
 # body: { billMf, name, address, connectionDate: "YYYY-MM-DD" }
 # ══════════════════════════════════════════════════════════════
 @consumers_bp.route("/<int:ref_no>", methods=["PUT"])
-@login_required
+@admin_required
 def update_consumer(ref_no):
     data = request.get_json(silent=True) or {}
     name = (data.get("name") or "").strip()
@@ -308,7 +308,7 @@ def update_consumer(ref_no):
 # body: { meterNumber, status: "Active"|"Inactive", phase, residentialDisplay, sizePlot }
 # ══════════════════════════════════════════════════════════════
 @consumers_bp.route("/<int:ref_no>/meters", methods=["POST"])
-@login_required
+@admin_required
 def add_meter(ref_no):
     data = request.get_json(silent=True) or {}
     meter_no_raw = (data.get("meterNumber") or "").strip()
@@ -371,7 +371,7 @@ def add_meter(ref_no):
 
 
 @consumers_bp.route("/<int:ref_no>/meters/<int:meter_id>", methods=["PUT"])
-@login_required
+@admin_required
 def update_meter(ref_no, meter_id):
     data = request.get_json(silent=True) or {}
     new_meter_no_raw = (data.get("meterNumber") or "").strip()
@@ -457,100 +457,4 @@ def update_meter(ref_no, meter_id):
         return jsonify({"message": "Meter updated successfully!", "meters": [_meter_dict(m) for m in meters]}), 200
     finally:
         db.close()
-    # data = request.get_json(silent=True) or {}
-    # new_meter_no_raw = (data.get("meterNumber") or "").strip()
-    # status_label = data.get("status", "Inactive")
-    # phase = data.get("phase", "")
-    # residential_display = data.get("residentialDisplay", "Residential")
-    # size_plot = data.get("sizePlot", "")
-
-    # if len(new_meter_no_raw) != 7 or not new_meter_no_raw.isdigit():
-    #     return jsonify({"error": "Meter number must be exactly 7 digits."}), 400
-    # new_meter_no = int(new_meter_no_raw)
-    # residential_code = RESIDENTIAL_DISPLAY_TO_CODE.get(residential_display, "R")
-
-    # db = SessionLocal()
-    # try:
-    #     meter = db.query(MeterDetailTbl).filter_by(MeterNumber=meter_id).first()
-    #     if meter is None:
-    #         return jsonify({"error": "Meter not found."}), 404
-
-    #     now = datetime.now()
-    #     meter_no_changed = new_meter_no != meter.MeterNumber
-
-    #     if meter_no_changed:
-    #         meter.Status = "I"
-    #         meter.UserID = session["user_id"]
-    #         meter.Date = now.date()
-    #         meter.Time = now.time()
-
-    #         others = (
-    #             db.query(MeterDetailTbl)
-    #             .filter(MeterDetailTbl.ReferenceNo == ref_no, MeterDetailTbl.Status == "A",
-    #                     MeterDetailTbl.MeterNumber != meter_id)
-    #             .all()
-    #         )
-    #         for m in others:
-    #             m.Status = "I"
-    #             m.UserID = session["user_id"]
-    #             m.Date = now.date()
-    #             m.Time = now.time()
-
-    #         db.add(MeterDetailTbl(
-    #             MeterNumber=new_meter_no, Phase=phase, Residential=residential_code,
-    #             SizePlot=size_plot, Status="A", ReferenceNo=ref_no,
-    #             UserID=session["user_id"], Date=now.date(), Time=now.time(),
-    #         ))
-    #     else:
-    #         new_status = "A" if status_label == "Active" else "I"
-    #         if new_status == "A" and meter.Status != "A":
-    #             others = (
-    #                 db.query(MeterDetailTbl)
-    #                 .filter(MeterDetailTbl.ReferenceNo == ref_no, MeterDetailTbl.Status == "A",
-    #                         MeterDetailTbl.MeterNumber != meter_id)
-    #                 .all()
-    #             )
-    #             for m in others:
-    #                 m.Status = "I"
-    #                 m.UserID = session["user_id"]
-    #                 m.Date = now.date()
-    #                 m.Time = now.time()
-
-    #         meter.Phase = phase
-    #         meter.Residential = residential_code
-    #         meter.SizePlot = size_plot
-    #         meter.Status = new_status
-    #         meter.UserID = session["user_id"]
-    #         meter.Date = now.date()
-    #         meter.Time = now.time()
-
-    #     db.commit()
-
-    #     # ── Recompute consumer connect/disconnect state ─────────
-    #     any_active = (
-    #         db.query(MeterDetailTbl)
-    #         .filter(MeterDetailTbl.ReferenceNo == ref_no, MeterDetailTbl.Status == "A")
-    #         .first()
-    #         is not None
-    #     )
-    #     consumer = db.query(ConsumerTbl).filter_by(ReferenceNo=ref_no).first()
-    #     if consumer is not None:
-    #         if not any_active and consumer.State != "D":
-    #             consumer.State = "D"
-    #             consumer.UserID = session["user_id"]
-    #             consumer.Date = now.date()
-    #             consumer.Time = now.time()
-    #         elif any_active and consumer.State == "D":
-    #             consumer.State = " "
-    #             consumer.UserID = session["user_id"]
-    #             consumer.Date = now.date()
-    #             consumer.Time = now.time()
-    #         db.commit()
-
-    #     meters = db.query(MeterDetailTbl).filter_by(ReferenceNo=ref_no).all()
-    #     return jsonify({
-    #         "message": "Meter updated successfully!",
-    #         "meters": [_meter_dict(m) for m in meters],
-    #     }), 200
-    # finally:
-    #     db.close()
+   

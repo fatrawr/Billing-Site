@@ -7,7 +7,7 @@ from datetime import datetime
 
 from flask import Blueprint, jsonify, request, session
 
-from auth_utils import login_required
+from auth_utils import admin_required, login_required
 from database import SessionLocal
 from models import ConsumerTbl, DatesTbl, MasterTbl, PaymentTbl
 
@@ -26,7 +26,7 @@ def _get_target_yyyymm(db):
 # POST /api/payments/reset — port of PaymentResetHelper + PaymentSeederLogic.Seed
 # ══════════════════════════════════════════════════════════════
 @payment_bp.route("/reset", methods=["POST"])
-@login_required
+@admin_required
 def reset_payments():
     """Confirmation dialog lives on the frontend (window.confirm) before this
     is ever called - same as the C# MessageBox.Show Yes/No gate."""
@@ -70,7 +70,7 @@ def reset_payments():
 # POST /api/payments/post — port of PaymentPostingHelper.PostPayments
 # ══════════════════════════════════════════════════════════════
 @payment_bp.route("/post", methods=["POST"])
-@login_required
+@admin_required
 def post_payments():
     """See PaymentPosting.cs for the exact branching rules this follows
     (before/after due date, then zero/partial/full/extra payment amount)."""
@@ -132,7 +132,7 @@ def post_payments():
 # Payment Entry screen endpoints — web equivalent of PaymentForm.cs
 # ══════════════════════════════════════════════════════════════
 @payment_bp.route("/entry/init", methods=["GET"])
-@login_required
+@admin_required
 def payment_entry_init():
     db = SessionLocal()
     try:
@@ -157,7 +157,7 @@ def payment_entry_init():
 
 
 @payment_bp.route("/entry/<int:ref_no>", methods=["GET"])
-@login_required
+@admin_required
 def payment_entry_get(ref_no):
     db = SessionLocal()
     try:
@@ -174,7 +174,7 @@ def payment_entry_get(ref_no):
 
 
 @payment_bp.route("/entry/<int:ref_no>", methods=["PUT"])
-@login_required
+@admin_required
 def payment_entry_save(ref_no):
     data = request.get_json(silent=True) or {}
     try:

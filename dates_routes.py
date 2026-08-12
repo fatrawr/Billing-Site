@@ -14,7 +14,7 @@ from datetime import date, datetime
 from flask import Blueprint, jsonify, request, session
 from sqlalchemy.exc import IntegrityError
 
-from auth_utils import login_required
+from auth_utils import admin_required, login_required
 from database import SessionLocal
 from models import DatesTbl
 import re
@@ -157,7 +157,7 @@ def list_dates():
 #         db.close()
 
 @dates_bp.route("", methods=["POST"])
-@login_required
+@admin_required
 def add_date():
     data = request.get_json(silent=True) or {}
     stored_month = _parse_month(data.get("month", ""))
@@ -258,7 +258,7 @@ def add_date():
 #         db.close()
 
 @dates_bp.route("", methods=["PUT"])
-@login_required
+@admin_required
 def update_date():
     data = request.get_json(silent=True) or {}
     old_month = data.get("oldMonth")

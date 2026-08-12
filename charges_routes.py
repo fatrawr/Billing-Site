@@ -12,7 +12,7 @@ from datetime import datetime
 
 from flask import Blueprint, jsonify, request, session
 
-from auth_utils import login_required
+from auth_utils import admin_required, login_required
 from database import SessionLocal
 from models import SoctyChargsTbl
 
@@ -34,7 +34,7 @@ def _group_rows(rows):
 # GET /api/charges   — grouped list, equivalent of LoadData()
 # ══════════════════════════════════════════════════════════════
 @charges_bp.route("", methods=["GET"])
-#@login_required
+@login_required
 def list_charges():
     db = SessionLocal()
     try:
@@ -49,7 +49,7 @@ def list_charges():
 # body: { description, amounts: { "2K": "", "1K": "", "10M": "" } }
 # ══════════════════════════════════════════════════════════════
 @charges_bp.route("", methods=["POST"])
-@login_required
+@admin_required
 def add_charge():
     data = request.get_json(silent=True) or {}
     description = (data.get("description") or "").strip()
@@ -88,7 +88,7 @@ def add_charge():
 # Deletes existing rows for this description, reinserts with new amounts.
 # ══════════════════════════════════════════════════════════════
 @charges_bp.route("", methods=["PUT"])
-@login_required
+@admin_required
 def update_charge():
     data = request.get_json(silent=True) or {}
     description = (data.get("description") or "").strip()
@@ -130,7 +130,7 @@ def update_charge():
 # body: { description }
 # ══════════════════════════════════════════════════════════════
 @charges_bp.route("", methods=["DELETE"])
-@login_required
+@admin_required
 def delete_charge():
     data = request.get_json(silent=True) or {}
     description = (data.get("description") or "").strip()
