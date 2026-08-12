@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from email_validator import validate_email, EmailNotValidError
 
 from models import SignUpTbl, PasswordResetTbl
-from resend_client import send_reset_code_email
+from resend_clients import send_reset_code_email
 
 import re
 from datetime import date, datetime
