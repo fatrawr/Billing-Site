@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, Time, Integer, Numeric
+from sqlalchemy import Column, String, Date, Time, Integer, Numeric, Boolean, DateTime
 from database import Base
 
 
@@ -23,6 +23,14 @@ class SignUpTbl(Base):
             "department": self.Department,
             "date": self.Date.isoformat() if self.Date else None,
         }
+
+class PasswordResetTbl(Base):
+    __tablename__ = "WPasswordReset_Tbl"
+    UserID     = Column(String(15), primary_key=True)
+    Code       = Column(String(6), nullable=True)
+    ExpiresAt  = Column(DateTime, nullable=True)
+    ResetToken = Column(String(64), nullable=True)
+    Verified   = Column(Boolean, default=False)
 
 class ConsumerTbl(Base):
     """Maps onto Consumer_Tbl. Columns inferred from BillForm.cs/BillRender.cs usage
