@@ -51,6 +51,7 @@ function Shell({ children }) {
 
 export default function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
      <Shell>
       
@@ -84,6 +85,7 @@ export default function App() {
       
       </Shell>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 

@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api.js";
 import AuthShell from "../components/Authshell.jsx";
+import { useAuth } from "../auth/AuthProvider.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setStatus } = useAuth();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,7 +22,8 @@ export default function Login() {
 
     try {
       await api.login({ userId: userId.trim(), password });
-      navigate("/menu"); // wire this up once you have a dashboard route
+      setStatus("allowed"); // cache auth state so RequireAuth doesn't re-check
+      navigate("/menu");
     } catch (err) {
       setError(err.message);
     }
