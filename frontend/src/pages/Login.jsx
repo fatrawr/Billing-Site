@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api.js";
 import AuthShell from "../components/Authshell.jsx";
-import { useAuth } from "../auth/AuthProvider.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
