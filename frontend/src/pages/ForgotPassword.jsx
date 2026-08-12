@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
-import AuthShell from "../components/AuthShell.jsx";
+import AuthShell from "../components/Authshell.jsx";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
