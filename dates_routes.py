@@ -98,11 +98,20 @@ def _row_to_dict(row):
 # GET /api/dates   — equivalent of LoadData(), sorted chronologically
 # ══════════════════════════════════════════════════════════════
 @dates_bp.route("", methods=["GET"])
-#@login_required
+@login_required
 def list_dates():
     db = SessionLocal()
     try:
-        rows = db.query(DatesTbl).order_by(DatesTbl.Month).all()
+        # Grab the 6 most recent months (Month is stored as YYYYMM, so a
+        # plain numeric DESC sort is the most-recent-first order), then
+        # flip back to ascending so the table still reads oldest-to-newest.
+        rows = (
+            db.query(DatesTbl)
+            .order_by(DatesTbl.Month.desc())
+            .limit(6)
+            .all()
+        )
+        rows.reverse()
         return jsonify([_row_to_dict(r) for r in rows]), 200
     finally:
         db.close()
