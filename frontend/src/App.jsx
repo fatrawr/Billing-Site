@@ -56,30 +56,30 @@ export default function App() {
      <Shell>
       
         <Routes>
-          {/* ── Auth screens: no shared chrome, use AuthShell instead ── */}
-          <Route path="/" element={<Welcome />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="login" element={<Login />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-         
+            {/* ── Auth screens: no shared chrome, use AuthShell instead ── */}
+            <Route path="/" element={<Welcome />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="login" element={<Login />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+          
           {/* ── Everything else: wrapped in AppShell for shared header ── */}
           <Route element={<RequireAuth />}>
-        <Route path="menu" element={<MainMenu />} />
-        <Route path="menu/consumers" element={<ConsumerMenu />} />
-        <Route path="menu/consumers/add" element={<ConsumerAdd />} />
-        <Route path="menu/consumers/update" element={<ConsumerUpdate />} />
-        <Route path="menu/consumers/browse" element={<ConsumerDisplay />} />
-        <Route path="menu/charges" element={<SocietyCharges />} />
-        <Route path="menu/staff" element={<StaffPhoneNumbers />} />
-        <Route path="menu/dates" element={<BillingSchedule />} />
-        <Route path="menu/bills" element={<BillProcessMenu />} />
-        <Route path="menu/bills/generate" element={<BillGenerate />} />
-        <Route path="menu/bills/preview" element={<BillPreview />} />
-        <Route path="menu/bills/payment-entry" element={<PaymentEntry />} />
-        <Route path="menu/bills/reading-entry" element={<ReadingEntry />} />
-        <Route path="menu/bank" element={<BankInformation />} />
-        <Route path="menu/config" element={<ConfigInformation />} />
-        </Route>
+            <Route path="menu" element={<MainMenu />} />
+            <Route path="menu/consumers" element={<ConsumerMenu />} />
+            <Route path="menu/consumers/add" element={<ConsumerAdd />} />
+            <Route path="menu/consumers/update" element={<ConsumerUpdate />} />
+            <Route path="menu/consumers/browse" element={<ConsumerDisplay />} />
+            <Route path="menu/charges" element={<SocietyCharges />} />
+            <Route path="menu/staff" element={<StaffPhoneNumbers />} />
+            <Route path="menu/dates" element={<BillingSchedule />} />
+            <Route path="menu/bills" element={<BillProcessMenu />} />
+            <Route path="menu/bills/generate" element={<BillGenerate />} />
+            <Route path="menu/bills/preview" element={<BillPreview />} />
+            <Route path="menu/bills/payment-entry" element={<PaymentEntry />} />
+            <Route path="menu/bills/reading-entry" element={<ReadingEntry />} />
+            <Route path="menu/bank" element={<BankInformation />} />
+            <Route path="menu/config" element={<ConfigInformation />} />
+          </Route>
           
         </Routes>
       

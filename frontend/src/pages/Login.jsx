@@ -24,7 +24,7 @@ export default function Login() {
     try {
       await api.login({ userId: userId.trim(), password });
       setStatus("allowed"); // cache auth state so RequireAuth doesn't re-check
-      await refresh();
+      //await refresh(); // refresh user info
       navigate("/menu");
     } catch (err) {
       setError(err.message);
