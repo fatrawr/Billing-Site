@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api.js";
+import { api } from "../api.js"
+import { useAuth } from "../components/AuthContext.jsx";;
 
 export default function StaffPhoneNumbers() {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
 
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -130,8 +132,8 @@ export default function StaffPhoneNumbers() {
                     onChange={(e) => setEditPhone(digitsOnly(e.target.value))}
                   />
                   <span className="charges-row__actions">
-                    <button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.id)}>Save</button>
-                    <button className="btn-chip btn-chip--cancel" onClick={() => setEditingId(null)}>Cancel</button>
+                    {isAdmin && (<button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.id)}>Save</button>)}
+                    {isAdmin && (<button className="btn-chip btn-chip--cancel" onClick={() => setEditingId(null)}>Cancel</button>)}
                   </span>
                 </>
               ) : (
@@ -139,8 +141,12 @@ export default function StaffPhoneNumbers() {
                   <span className="charges-row__desc">{row.staffName}</span>
                   <span>{row.phoneNumber}</span>
                   <span className="charges-row__actions">
+                  {isAdmin && (
                     <button className="btn-chip btn-chip--update" onClick={() => startEdit(row)}>Update</button>
-                    <button className="btn-chip btn-chip--delete" onClick={() => removeStaff(row.id)}>Delete</button>
+                  )}
+                  {isAdmin && (
+                    <button className="btn-chip btn-chip--delete" onClick={() => removeStaff(row)}>Delete</button>
+                  )}
                   </span>
                 </>
               )}

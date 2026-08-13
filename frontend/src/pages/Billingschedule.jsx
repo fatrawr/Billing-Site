@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { useAuth } from "../components/AuthContext.jsx";
 
 const EMPTY_ADD = { month: "", rdgDate: "", issDate: "", dueDate: "" };
 
@@ -40,6 +41,7 @@ export default function BillingSchedule() {
 
   const [editingMonth, setEditingMonth] = useState(null);
   const [editForm, setEditForm] = useState(EMPTY_ADD);
+  const { isAdmin } = useAuth();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -164,8 +166,8 @@ export default function BillingSchedule() {
                     onChange={(e) => setEditForm((f) => ({ ...f, dueDate: sanitizeDateInput(e.target.value) }))}
                   />
                   <span className="charges-row__actions">
-                    <button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.month)}>Save</button>
-                    <button className="btn-chip btn-chip--cancel" onClick={() => setEditingMonth(null)}>Cancel</button>
+                    {isAdmin && (<button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.month)}>Save</button>)}
+                    {isAdmin && (<button className="btn-chip btn-chip--cancel" onClick={() => setEditingMonth(null)}>Cancel</button>)}
                   </span>
                 </>
               ) : (

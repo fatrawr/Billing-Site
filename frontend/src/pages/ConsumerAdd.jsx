@@ -1,6 +1,7 @@
 import { useState, useEffect  } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { useAuth } from "../components/AuthContext.jsx";
 
 const RESIDENTIAL_OPTIONS = [
   { value: "R", label: "Residential" },
@@ -36,6 +37,7 @@ export default function ConsumerAdd() {
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const { isAdmin } = useAuth();
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
   const digitsOnly = (max) => (e) => e.target.value.replace(/[^0-9]/g, "").slice(0, max);
@@ -171,12 +173,14 @@ useEffect(() => {
         </div>
 
         <div className="button-row">
-          <button type="submit" className="btn btn-primary">
-            Add&nbsp;&nbsp;<span className="btn-exit__key">F1</span>
-          </button>
-          <button type="button" className="btn btn-secondary" onClick={() => setForm(EMPTY)}>
+          {isAdmin && (
+            <button type="submit" className="btn btn-primary">
+              Add&nbsp;&nbsp;<span className="btn-exit__key">F1</span>
+            </button>
+          )}
+          {isAdmin && (<button type="button" className="btn btn-secondary" onClick={() => setForm(EMPTY)}>
             Clear&nbsp;&nbsp;<span className="btn-exit__key">F9</span>
-          </button>
+          </button>)}
         </div>
       </form>
 

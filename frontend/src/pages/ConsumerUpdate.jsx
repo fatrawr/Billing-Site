@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { useAuth } from "../components/AuthContext.jsx";
 
 const RESIDENTIAL_OPTIONS = ["Residential", "Commercial", "Semi Commercial"];
 const PHASE_OPTIONS = ["1", "3"];
@@ -33,6 +34,7 @@ export default function ConsumerUpdate() {
 
   const [addingMeter, setAddingMeter] = useState(false);
   const [newMeterForm, setNewMeterForm] = useState(null);
+  const { isAdmin } = useAuth();
 
 const EMPTY_NEW_METER = {
   meterNumber: "", initialReading: "", status: "Inactive",
@@ -178,7 +180,7 @@ const submitNewMeter = async () => {
             />
             </div>
             <div className="button-row">
-              <button type="submit" className="btn btn-primary">Save Consumer Details</button>
+              {isAdmin && (<button type="submit" className="btn btn-primary">Save Consumer Details</button>)} 
             </div>
           </form>
 
@@ -231,8 +233,8 @@ const submitNewMeter = async () => {
                         </select>
                       </div>
                       <div className="button-row">
-                        <button className="btn-chip btn-chip--save" onClick={() => saveMeter(m.meterNumber)}>Save</button>
-                        <button className="btn-chip btn-chip--cancel" onClick={() => setEditingMeterId(null)}>Cancel</button>
+                        {isAdmin && (<button className="btn-chip btn-chip--save" onClick={() => saveMeter(m.meterNumber)}>Save</button>)} 
+                        {isAdmin && (<button className="btn-chip btn-chip--cancel" onClick={() => setEditingMeterId(null)}>Cancel</button>)}
                       </div>
                     </>
                   ) : (
@@ -248,7 +250,7 @@ const submitNewMeter = async () => {
                       <div><span className="meter-card__label">Residential:</span> {m.residentialDisplay}</div>
                       <div><span className="meter-card__label">Size of Plot:</span> {m.sizePlot}</div>
                       <div className="button-row">
-                        <button className="btn-chip btn-chip--update" onClick={() => startEditMeter(m)}>Update</button>
+                        {isAdmin && (<button className="btn-chip btn-chip--update" onClick={() => startEditMeter(m)}>Update</button>)}
                       </div>
                     </>
                   )}
@@ -298,8 +300,8 @@ const submitNewMeter = async () => {
         </select>
       </div>
       <div className="button-row">
-        <button className="btn-chip btn-chip--save" onClick={submitNewMeter}>Save</button>
-        <button className="btn-chip btn-chip--cancel" onClick={() => setAddingMeter(false)}>Cancel</button>
+        {isAdmin && (<button className="btn-chip btn-chip--save" onClick={submitNewMeter}>Save</button>)}
+        {isAdmin && (<button className="btn-chip btn-chip--cancel" onClick={() => setAddingMeter(false)}>Cancel</button>)}
       </div>
     </div>
   )}
