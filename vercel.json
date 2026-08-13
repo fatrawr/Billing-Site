@@ -6,6 +6,6 @@
     { "src": "/(.*)", "dest": "app.py" }
   ],
    "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/(.*)", "dest": "frontend/index.html" }
   ]
 }
