@@ -291,4 +291,14 @@ def logout():
 def me():
     if "user_id" not in session:
         return _err("Not logged in.", 401)
-    return jsonify({"userId": session["user_id"], "name": session["user_name"]}), 200
+
+    db = SessionLocal()
+    try:
+        user = db.query(SignUpTbl).filter_by(UserID=session["user_id"]).first()
+        if user is None:
+            # Session points at a user that no longer exists (e.g. deleted account)
+            session.clear()
+            return _err("Not logged in.", 401)
+        return jsonify(user.to_dict()), 200
+    finally:
+        db.close()
