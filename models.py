@@ -22,6 +22,7 @@ class SignUpTbl(Base):
             "name": self.Name,
             "email": self.Email,
             "department": self.Department,
+            "role": self.Role,   # ← and add this line
             "date": self.Date.isoformat() if self.Date else None,
         }
 
