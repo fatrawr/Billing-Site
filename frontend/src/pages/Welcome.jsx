@@ -78,31 +78,7 @@ export default function Welcome() {
 
   return (
     <div className="landing">
-      <div className="landing__nav-wrap">
-        <motion.nav
-          className="hero__nav"
-          initial="hidden"
-          animate="visible"
-          variants={navVariants}
-        >
-          <div className="hero__nav-brand">
-            <img src="/logo.png" alt="Society logo" />
-            <span>{SOCIETY_NAME}</span>
-          </div>
-
-          <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="hero__nav-tabs" />
-
-          <div className="hero__nav-right">
-            <Clock className="hero__clock" />
-            <Link className="hero__login-btn" to="/login">
-              <ShieldCheck size={15} />
-              Login as Admin
-            </Link>
-          </div>
-        </motion.nav>
-      </div>
-
-      <section className="hero">
+      <section className="hero" >
         <motion.div
           className="hero__inner"
           initial="hidden"
@@ -115,6 +91,23 @@ export default function Welcome() {
             alt=""
             className="hero__bg"
           />
+
+          <motion.nav variants={navVariants} className="hero__nav">
+            <div className="hero__nav-brand">
+              <img src="/logo.png" alt="Society logo" />
+              <span>{SOCIETY_NAME}</span>
+            </div>
+
+            <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="hero__nav-tabs" />
+
+            <div className="hero__nav-right">
+              <Clock className="hero__clock" />
+              <Link className="hero__login-btn" to="/login">
+                <ShieldCheck size={15} />
+                Login as Admin
+              </Link>
+            </div>
+          </motion.nav>
 
           <div className="hero__body">
             <div className="hero__copy">
