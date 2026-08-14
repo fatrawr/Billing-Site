@@ -117,6 +117,12 @@
   background-attachment: fixed, fixed, fixed;
   background-blend-mode: normal, normal, soft-light;
 }
+.app-shell__sticky-group {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
 .main-bg .app-shell__body { background: transparent; }
   /* Wave — thin squiggly divider under the "Welcome"/"Log In" title */
   .auth-shell__wave {
@@ -209,7 +215,7 @@
   .sliding-number { display: inline-flex; }
   .sliding-digit { position: relative; display: inline-block; width: 0.62em; height: 1em; overflow: hidden; }
   .sliding-digit__inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;}
-  
+
 .app-shell__subbar {
   width: 100%; padding: var(--space-2) var(--space-4); background: var(--color-forest-mid);
   display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-4);
@@ -797,7 +803,8 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   }
 
   .hero__nav {
-    position: relative; z-index: 2; max-width: 900px; width: 100%; margin: 0 auto;
+    position: sticky; top: var(--space-5); z-index: 50; 
+    max-width: 900px; width: 100%; margin: 0 auto;
     display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
     background: rgba(255, 254, 251, 0.7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-radius: 9999px; padding: 8px 8px 8px 20px;

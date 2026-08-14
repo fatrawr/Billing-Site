@@ -41,31 +41,33 @@ export default function AppShell({ children }) {
 
   return (
     <div className={`app-shell${status === "authed" ? " main-bg" : ""}`}>
-      <header className="app-shell__topbar no-print">
-        <span className="app-shell__date">{dateStr}</span>
-        <div className="app-shell__brand">
-          <img src="/logo.png" alt="Society logo" className="app-shell__seal" />
-          <span className="app-shell__org">{SOCIETY_NAME}</span>
-          <DoodleStarTrio className="app-shell__doodle" />
-        </div>
-        <Clock className="app-shell__time" />
-      </header>
+      <div className="app-shell__sticky-group no-print">
+        <header className="app-shell__topbar">
+          <span className="app-shell__date">{dateStr}</span>
+          <div className="app-shell__brand">
+            <img src="/logo.png" alt="Society logo" className="app-shell__seal" />
+            <span className="app-shell__org">{SOCIETY_NAME}</span>
+            <DoodleStarTrio className="app-shell__doodle" />
+          </div>
+          <Clock className="app-shell__time" />
+        </header>
 
-      {showSubbar && (
-        <div className="app-shell__subbar no-print">
-          <button type="button" className="app-shell__hamburger" onClick={() => setNavOpen(true)} aria-label="Open menu">
-            <Menu size={18} />
-          </button>
+        {showSubbar && (
+          <div className="app-shell__subbar">
+            <button type="button" className="app-shell__hamburger" onClick={() => setNavOpen(true)} aria-label="Open menu">
+              <Menu size={18} />
+            </button>
 
-          <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="app-shell__tabs" />
+            <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="app-shell__tabs" />
 
-          <button type="button" className="app-shell__logout" onClick={logout}>
-            <LogOut size={15} />
-            <span>Log Out</span>
-          </button>
-        </div>
+            <button type="button" className="app-shell__logout" onClick={logout}>
+              <LogOut size={15} />
+              <span>Log Out</span>
+            </button>
+          </div>
       )}
-
+      </div>
+      
       {showSubbar && <SideNav open={navOpen} onClose={() => setNavOpen(false)} />}
 
       <main className="app-shell__body">{children}</main>
