@@ -20,20 +20,18 @@ export function AuthProvider({ children }) {
 
   useEffect(() => { refresh(); }, []);
 
+  const logout = async () => {
+    try { await api.logout(); } catch { /* ignore */ }
+    setUser(null);
+    setStatus("guest");
+  };
+
   return (
-    <AuthContext.Provider value={{ status, user, isAdmin: user?.role === "Admin", refresh }}>
+    <AuthContext.Provider value={{ status, user, isAdmin: user?.role === "Admin", refresh, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
-
-const logout = async () => {
-  try { await api.logout(); } catch { /* ignore */ }
-  setUser(null);
-  setStatus("guest");
-};
-// add `logout` to the context value:
-<AuthContext.Provider value={{ status, user, isAdmin: user?.role === "Admin", refresh, logout }}></AuthContext.Provider>
 
 export function useAuth() {
   return useContext(AuthContext);

@@ -67,7 +67,7 @@ export default function AppShell({ subtitle, children }) {
         )
       )}
 
-      <SideNav open={navOpen} onClose={() => setNavOpen(false)} />
+      {status === "authed" && <SideNav open={navOpen} onClose={() => setNavOpen(false)} />}
 
       <main className="app-shell__body">{children}</main>
       <div className="no-print"><SiteFooter /></div>
