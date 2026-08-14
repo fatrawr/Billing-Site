@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation,  } from "react-router-dom";
 import AppShell from "./components/AppShell.jsx";
 import RequireAuth from "./components/RequireAuth.jsx";
 import Welcome from "./pages/Welcome.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Login from "./pages/Login.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
@@ -48,7 +49,7 @@ function Shell({ children }) {
   const { pathname } = useLocation();
   // The landing page owns its own nav/footer and shouldn't be wrapped
   // in the internal app chrome (topbar/subbar).
-  if (pathname === "/") return children;
+  if (pathname === "/" || pathname === "/contact") return children;
   return <AppShell subtitle={PAGE_TITLES[pathname] ?? ""}>{children}</AppShell>;
 }
 
@@ -60,6 +61,7 @@ export default function App() {
         <Routes>
             {/* ── Auth screens: no shared chrome, use AuthShell instead ── */}
             <Route path="/" element={<Welcome />} />
+            <Route path="contact" element={<ContactUs />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="login" element={<Login />} />
             <Route path="forgot-password" element={<ForgotPassword />} />

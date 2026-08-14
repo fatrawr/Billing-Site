@@ -317,6 +317,7 @@
   }
   .auth-card__inner { background: var(--color-card); border-radius: 26px; padding: var(--space-7) var(--space-6) var(--space-6); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
   .auth-card__header { text-align: center; margin-bottom: var(--space-5); }
+  .auth-card__header .auth-shell__eyebrow { color: var(--color-terracotta); }
   .auth-card__title { font-family: var(--font-display); font-weight: 600; font-size: 24px; color: var(--color-ink); margin: 6px 0 0; }
   .auth-card__subtitle { font-size: 13px; color: var(--color-ink-soft); margin-top: 10px; line-height: 1.5; }
   .auth-card__form { display: flex; flex-direction: column; gap: var(--space-3); }
@@ -336,6 +337,9 @@
   .icon-field__input--pr { padding-right: 40px; }
   .icon-field__toggle { position: absolute; right: 12px; background: none; border: none; cursor: pointer; color: var(--color-ink-soft); display: flex; }
   .icon-field__toggle:hover { color: var(--color-ink); }
+  .icon-field__select { appearance: none; cursor: pointer; }
+  .icon-field__chevron { position: absolute; right: 14px; color: var(--color-ink-soft); pointer-events: none; }
+  .auth-card__shell--wide { max-width: 460px; }
 
   .link, .back-link {
     display: block; text-align: center; font-size: 13px; font-weight: 600;
@@ -769,9 +773,9 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   .hero__cta-primary:active { transform: scale(0.96); }
   .hero__cta-icon {
     display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
-    border-radius: 9999px; background: var(--color-card); color: var(--color-ink);
+    border-radius: 9999px; background: var(--color-card); color: var(--color-ink); border: none;
     box-shadow: 0 18px 50px rgba(43,66,56,0.12), inset 0 1px 0 1px rgba(255,255,255,0.5);
-    transition: box-shadow 200ms ease, transform 200ms ease;
+    transition: box-shadow 200ms ease, transform 200ms ease; cursor: pointer; padding: 0;
   }
   .hero__cta-icon:hover { transform: scale(1.06); }
 
@@ -786,6 +790,56 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   .generate-bill-card {
     width: 100%; max-width: 380px; background: var(--color-card); border: 1px solid var(--color-line);
     border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-soft); animation: rise 0.4s ease both;
+  }
+
+  /* ── Shared marketing sections (About / Services / Contact) ── */
+  .site-section { padding: var(--space-8) var(--space-6); scroll-margin-top: 90px; }
+  .site-section--alt { background: rgba(232, 226, 214, 0.35); }
+  .site-section__inner { max-width: 880px; margin: 0 auto; }
+  .site-section__eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-terracotta); margin-bottom: 10px; }
+  .site-section__title { font-family: var(--font-display); font-weight: 600; font-size: clamp(26px, 4vw, 38px); color: var(--color-ink); margin: 0 0 var(--space-4); }
+  .site-section__body { font-size: 15px; color: var(--color-ink-soft); line-height: 1.7; max-width: 640px; }
+
+  .service-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+  .service-card {
+    background: var(--color-card); border: 1px solid var(--color-line); border-radius: var(--radius-lg);
+    padding: var(--space-5); color: var(--color-forest);
+  }
+  .service-card h3 { font-family: var(--font-display); font-size: 16px; color: var(--color-ink); margin: 10px 0 6px; }
+  .service-card p { font-size: 13.5px; color: var(--color-ink-soft); line-height: 1.55; margin: 0; }
+
+  @media (max-width: 640px) {
+    .service-grid { grid-template-columns: 1fr; }
+  }
+
+  .hero__nav--plain {
+    max-width: 900px; margin: var(--space-5) auto 0; background: var(--color-card);
+    box-shadow: var(--shadow-lift); backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+
+  .contact-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+  .contact-card {
+    background: var(--color-card); border: 1px solid var(--color-line); border-radius: var(--radius-xl);
+    padding: var(--space-5); display: flex; flex-direction: column; box-shadow: var(--shadow-soft);
+  }
+  .contact-card__icon {
+    width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--color-terracotta-light);
+    color: var(--color-terracotta); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);
+  }
+  .contact-card__title { font-family: var(--font-display); font-size: 16.5px; font-weight: 600; color: var(--color-ink); margin: 0 0 8px; }
+  .contact-card__desc { font-size: 13px; color: var(--color-ink-soft); line-height: 1.55; margin: 0 0 var(--space-5); flex: 1; }
+  .contact-card__action {
+    display: inline-flex; align-items: center; justify-content: center; text-align: center;
+    background: var(--color-forest); color: var(--color-card); border-radius: 9999px;
+    padding: 10px 16px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 200ms ease;
+  }
+  .contact-card__action:hover { background: var(--color-forest-mid); }
+
+  @media (max-width: 900px) {
+    .contact-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .contact-grid { grid-template-columns: 1fr; }
   }
 }
 

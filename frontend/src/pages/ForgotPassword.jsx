@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { api } from "../api.js";
-import AuthShell from "../components/Authshell.jsx";
+import AuthCard from "../components/AuthCard.jsx";
 import OTPDialog from "../components/OTPDialog.jsx";
 import { notifySuccess, notifyError } from "../lib/toast.js";
 
@@ -15,6 +16,8 @@ export default function ForgotPassword() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const sendCode = async (e) => {
     e.preventDefault();
@@ -56,47 +59,50 @@ export default function ForgotPassword() {
 
     setLoading(true);
     try {
-      await api.resetPassword({
-        email: email.trim(),
-        resetToken,
-        newPassword,
-        confirmPassword,
-      });
+      await api.resetPassword({ email: email.trim(), resetToken, newPassword, confirmPassword });
+      notifySuccess("Password reset", "Please log in with your new password.");
       navigate("/login", { state: { notice: "Password reset successfully! Please log in." } });
     } catch (err) {
       setError(err.message);
+      notifyError("Reset failed", err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthShell
+    <AuthCard
       eyebrow="Account Recovery"
       title="Reset Password"
+      subtitle={
+        stage === "email"
+          ? "Enter your email and we'll send a verification code."
+          : stage === "code"
+          ? "Verifying your identity…"
+          : "Choose a new password for your account."
+      }
       footer={<a className="back-link" href="/login" onClick={(e) => { e.preventDefault(); navigate("/login"); }}>Back to Log In</a>}
     >
       {error && <div className="flash error">{error}</div>}
       {notice && <div className="flash success">{notice}</div>}
 
       {stage === "email" && (
-        <form onSubmit={sendCode}>
-          <div className="field">
-            <label>Email Address</label>
+        <form onSubmit={sendCode} className="auth-card__form">
+          <div className="icon-field">
+            <Mail className="icon-field__icon" size={16} />
             <input
+              className="icon-field__input"
               type="email"
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
               required
               autoFocus
             />
           </div>
-          <div className="button-row">
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? "Sending…" : "Send Code"}
-            </button>
-          </div>
+          <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: "100%" }}>
+            {loading ? "Sending…" : "Send Code"}
+          </button>
         </form>
       )}
 
@@ -116,11 +122,13 @@ export default function ForgotPassword() {
       />
 
       {stage === "password" && (
-        <form onSubmit={resetPasswordSubmit}>
-          <div className="field">
-            <label>New Password (6–15 chars)</label>
+        <form onSubmit={resetPasswordSubmit} className="auth-card__form">
+          <div className="icon-field">
+            <Lock className="icon-field__icon" size={16} />
             <input
-              type="password"
+              className="icon-field__input icon-field__input--pr"
+              type={showPassword ? "text" : "password"}
+              placeholder="New Password (6–15 chars)"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               minLength={6}
@@ -128,25 +136,31 @@ export default function ForgotPassword() {
               required
               autoFocus
             />
+            <button type="button" className="icon-field__toggle" onClick={() => setShowPassword((v) => !v)} aria-label="Toggle password visibility">
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
-          <div className="field">
-            <label>Confirm New Password</label>
+          <div className="icon-field">
+            <Lock className="icon-field__icon" size={16} />
             <input
-              type="password"
+              className="icon-field__input icon-field__input--pr"
+              type={showConfirm ? "text" : "password"}
+              placeholder="Confirm New Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               minLength={6}
               maxLength={15}
               required
             />
-          </div>
-          <div className="button-row">
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? "Resetting…" : "Reset Password"}
+            <button type="button" className="icon-field__toggle" onClick={() => setShowConfirm((v) => !v)} aria-label="Toggle password visibility">
+              {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
+          <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: "100%" }}>
+            {loading ? "Resetting…" : "Reset Password"}
+          </button>
         </form>
       )}
-    </AuthShell>
+    </AuthCard>
   );
 }

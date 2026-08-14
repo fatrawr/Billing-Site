@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ShieldCheck, ArrowRight, Play } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { ShieldCheck, ArrowRight, Play, FileText, Gauge, Wallet, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { api } from "../api.js";
 import AnimatedTabs from "../components/ui/AnimatedTabs.jsx";
@@ -35,11 +35,25 @@ const ctaVariants = {
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showForm, setShowForm] = useState(false);
   const [refNo, setRefNo] = useState("");
   const [month, setMonth] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.getElementById(location.hash.slice(1));
+      el?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [location.hash]);
+
+  const goToTab = (tab) => {
+    if (tab === "Contact") return navigate("/contact");
+    if (tab === "Home") return window.scrollTo({ top: 0, behavior: "smooth" });
+    document.getElementById(tab.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const digitsOnly = (v) => v.replace(/[^0-9]/g, "").slice(0, 9);
 
@@ -84,7 +98,7 @@ export default function Welcome() {
               <span>{SOCIETY_NAME}</span>
             </div>
 
-            <AnimatedTabs tabs={TABS} defaultValue="Home" className="hero__nav-tabs" />
+            <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="hero__nav-tabs" />
 
             <div className="hero__nav-right">
               <Clock className="hero__clock" />
@@ -111,9 +125,9 @@ export default function Welcome() {
                   <motion.button variants={ctaVariants} className="hero__cta-primary" onClick={() => setShowForm(true)}>
                     Generate Bill
                   </motion.button>
-                  <motion.a variants={ctaVariants} href="#about" aria-label="Learn more" className="hero__cta-icon">
+                  <motion.button variants={ctaVariants} aria-label="Generate a bill" className="hero__cta-icon" onClick={() => setShowForm(true)}>
                     <Play size={15} style={{ marginLeft: 2 }} />
-                  </motion.a>
+                  </motion.button>
                 </motion.div>
               ) : (
                 <form className="generate-bill-card" onSubmit={submit}>
@@ -147,6 +161,47 @@ export default function Welcome() {
             </div>
           </div>
         </motion.div>
+      </section>
+
+      <section id="about" className="site-section">
+        <div className="site-section__inner">
+          <div className="site-section__eyebrow">About Us</div>
+          <h2 className="site-section__title">Who we are</h2>
+          <p className="site-section__body">
+            CETS is a member-owned co-operative society serving engineers across Lahore. This portal
+            keeps consumer records, meter readings, and monthly billing transparent and easy to reach
+            for every member — whether you're settling a bill or checking your account.
+          </p>
+        </div>
+      </section>
+
+      <section id="services" className="site-section site-section--alt">
+        <div className="site-section__inner">
+          <div className="site-section__eyebrow">Services</div>
+          <h2 className="site-section__title">What you can do here</h2>
+          <div className="service-grid">
+            <div className="service-card">
+              <FileText size={20} />
+              <h3>Bill Generation</h3>
+              <p>Look up and print a consumer's monthly bill by reference number.</p>
+            </div>
+            <div className="service-card">
+              <Gauge size={20} />
+              <h3>Meter Readings</h3>
+              <p>Monthly readings are logged and tied directly to each consumer's bill.</p>
+            </div>
+            <div className="service-card">
+              <Wallet size={20} />
+              <h3>Payments</h3>
+              <p>Payment records, arrears, and surcharges are tracked automatically.</p>
+            </div>
+            <div className="service-card">
+              <Users size={20} />
+              <h3>Consumer Records</h3>
+              <p>A single source of truth for every member's account and meter details.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <SiteFooter />
