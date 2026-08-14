@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ShieldCheck, ArrowRight, Play, FileText, Gauge, Wallet, Users } from "lucide-react";
+import { ShieldCheck, ArrowRight, Play, FileText, Gauge, Wallet, Users, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { api } from "../api.js";
 import AnimatedTabs from "../components/ui/AnimatedTabs.jsx";
@@ -131,6 +131,14 @@ export default function Welcome() {
                 </motion.div>
               ) : (
                 <form className="generate-bill-card" onSubmit={submit}>
+                  <button
+  type="button"
+  className="generate-bill-card__close"
+  aria-label="Close"
+  onClick={() => { setShowForm(false); setError(""); setRefNo(""); }}
+>
+  <X size={16} />
+</button>
                   {error && <div className="flash error">{error}</div>}
 
                   <div className="field">

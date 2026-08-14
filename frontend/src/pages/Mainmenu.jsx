@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Tile from "../components/Tile.jsx";
 import { api } from "../api.js";
+import { useAuth } from "../components/AuthContext.jsx"; 
 
 const ACCENTS = {
   forest: "#1c6b37",
@@ -21,6 +22,7 @@ const ITEMS = [
 
 export default function MainMenu() {
   const navigate = useNavigate();
+  const { logout: doLogout } = useAuth();
 
   useEffect(() => {
     const onKey = async (e) => {
@@ -36,10 +38,7 @@ export default function MainMenu() {
     return () => window.removeEventListener("keydown", onKey);
   }, [navigate]);
 
-  const logout = async () => {
-    try { await api.logout(); } catch { /* ignore */ }
-    navigate("/login");
-  };
+  const logout = async () => { await doLogout(); navigate("/"); };
 
   return (
     <div className="dashboard">
