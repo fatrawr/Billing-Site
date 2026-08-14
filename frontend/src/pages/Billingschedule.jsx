@@ -171,8 +171,8 @@ export default function BillingSchedule() {
                     onChange={(e) => setEditForm((f) => ({ ...f, dueDate: sanitizeDateInput(e.target.value) }))}
                   />
                   <span className="charges-row__actions">
-                    {isAdmin && (<button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.month)}>Save</button>)}
-                    {isAdmin && (<button className="btn-chip btn-chip--cancel" onClick={() => setEditingMonth(null)}>Cancel</button>)}
+                    <button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.month)}>Save</button>
+                    <button className="btn-chip btn-chip--cancel" onClick={() => setEditingMonth(null)}>Cancel</button>
                   </span>
                 </>
               ) : (
@@ -182,9 +182,12 @@ export default function BillingSchedule() {
                   <span>{toDMY(row.issDate)}</span>
                   <span>{toDMY(row.dueDate)}</span>
                   <span className="charges-row__actions">
-                    {!row.monthPassed && (
+                    {isAdmin && !row.monthPassed && (
                       <button className="btn-chip btn-chip--update" onClick={() => startEdit(row)}>Update</button>
                     )}
+                    {isAdmin && (
+                    <button className="btn-chip btn-chip--delete" onClick={() => removeStaff(row)}>Delete</button>
+                  )}
                   </span>
                 </>
               )}

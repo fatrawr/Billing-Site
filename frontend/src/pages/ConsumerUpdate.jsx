@@ -193,7 +193,7 @@ const submitNewMeter = async () => {
 
           <div className="button-row" style={{ alignItems: "center", justifyContent: "space-between", marginTop: 8 }}>
   <h2 className="consumer-section-title" style={{ margin: 0 }}>Meter Details</h2>
-  {!addingMeter && (
+  {isAdmin && !addingMeter && (
     <button type="button" className="btn-chip btn-chip--update" onClick={openAddMeter}>
       + Add Meter
     </button>

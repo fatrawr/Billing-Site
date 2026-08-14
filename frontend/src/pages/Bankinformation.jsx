@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 import { useConfirm } from "../components/ui/ConfirmDialog.jsx";
 import { notifySuccess, notifyError } from "../lib/toast.js";
+import { useAuth } from "../components/AuthContext.jsx";
 
 
 export default function BankInformation() {
@@ -21,6 +22,7 @@ export default function BankInformation() {
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editAcct, setEditAcct] = useState("");
+    const { isAdmin } = useAuth();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -149,8 +151,8 @@ export default function BankInformation() {
                   <span className="charges-row__desc">{row.bankName}</span>
                   <span>{row.accountNo}</span>
                   <span className="charges-row__actions">
-                    <button className="btn-chip btn-chip--update" onClick={() => startEdit(row)}>Update</button>
-                    <button className="btn-chip btn-chip--delete" onClick={() => removeBank(row.id)}>Delete</button>
+                    {isAdmin && (<button className="btn-chip btn-chip--update" onClick={() => startEdit(row)}>Update</button>)}
+                    {isAdmin && (<button className="btn-chip btn-chip--delete" onClick={() => removeBank(row.id)}>Delete</button>)}
                   </span>
                 </>
               )}

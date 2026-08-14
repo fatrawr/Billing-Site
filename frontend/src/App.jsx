@@ -66,8 +66,8 @@ export default function App() {
             <Route path="login" element={<Login />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
           
-          {/* ── Everything else: wrapped in AppShell for shared header ── */}
-          <Route element={<RequireAuth />}>
+          {/* ── <Route element={<RequireAuth />}>    </Route>  ── */}
+          
             <Route path="menu" element={<MainMenu />} />
             <Route path="menu/consumers" element={<ConsumerMenu />} />
             <Route path="menu/consumers/add" element={<ConsumerAdd />} />
@@ -83,7 +83,7 @@ export default function App() {
             <Route path="menu/bills/reading-entry" element={<ReadingEntry />} />
             <Route path="menu/bank" element={<BankInformation />} />
             <Route path="menu/config" element={<ConfigInformation />} />
-          </Route>
+          
           
         </Routes>
       

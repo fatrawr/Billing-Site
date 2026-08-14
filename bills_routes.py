@@ -168,7 +168,7 @@ def _build_payload(db, ref_no, month, silent=False):
 
 
 @bills_bp.route("/preview", methods=["GET"])
-@admin_required
+#@admin_required
 def preview_bills():
     month_str = request.args.get("month", "")
     from_ref = request.args.get("from", "")

@@ -141,8 +141,8 @@ export default function StaffPhoneNumbers() {
                     onChange={(e) => setEditPhone(digitsOnly(e.target.value))}
                   />
                   <span className="charges-row__actions">
-                    {isAdmin && (<button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.id)}>Save</button>)}
-                    {isAdmin && (<button className="btn-chip btn-chip--cancel" onClick={() => setEditingId(null)}>Cancel</button>)}
+                     <button className="btn-chip btn-chip--save" onClick={() => saveEdit(row.id)}>Save</button>
+                     <button className="btn-chip btn-chip--cancel" onClick={() => setEditingId(null)}>Cancel</button>
                   </span>
                 </>
               ) : (

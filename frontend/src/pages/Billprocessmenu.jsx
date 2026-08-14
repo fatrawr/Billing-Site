@@ -45,10 +45,13 @@ export default function BillProcessMenu() {
           runAction("Populate Reading Table", api.resetReadings);
       } },
     { number: 2, title: "Payment Entry", subtitle: "Payment of previous Bill", accent: ACCENTS.forest,
+      adminOnly: true,
       to: "/menu/bills/payment-entry" },
     { number: 5, title: "Reading Entry", subtitle: "Reading of Current Month", accent: ACCENTS.navy,
+      adminOnly: true,
       to: "/menu/bills/reading-entry" },
     { number: 3, title: "Payment Posting", subtitle: "Post in Master Table", accent: ACCENTS.forest,
+      adminOnly: true,
       onClick: async () => {
         if (await confirmDialog("This will post payments into Master_Tbl for the current billing month. Continue?"))
           runAction("Payment Posting", api.postPayments);
@@ -60,7 +63,6 @@ export default function BillProcessMenu() {
           runAction("Reading Posting", api.postReadings);
       } },
     { number: 7, title: "Bill Generation", subtitle: "Generate a Bill", accent: ACCENTS.forest,
-      adminOnly: true,
       to: "/menu/bills/generate" },
   ];
 
