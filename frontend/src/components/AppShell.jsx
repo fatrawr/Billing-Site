@@ -52,7 +52,7 @@ export default function AppShell({ subtitle, children }) {
 
         <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="app-shell__tabs" />
 
-        {subtitle && <span className="app-shell__subtitle">{subtitle}</span>}
+        {/* {subtitle && <span className="app-shell__subtitle">{subtitle}</span>} */}
 
         <button type="button" className="app-shell__logout" onClick={logout}>
           <LogOut size={15} />
@@ -60,7 +60,7 @@ export default function AppShell({ subtitle, children }) {
         </button>
       </div>
       )}
-      
+
       {status === "authed" && <SideNav open={navOpen} onClose={() => setNavOpen(false)} />}
 
       <main className="app-shell__body">{children}</main>
