@@ -44,7 +44,7 @@ export default function AppShell({ subtitle, children }) {
         <Clock className="app-shell__time" />
       </header>
 
-      {status === "authed" ? (
+      {status === "authed" && (
       <div className="app-shell__subbar no-print">
         <button type="button" className="app-shell__hamburger" onClick={() => setNavOpen(true)} aria-label="Open menu">
           <Menu size={18} />
@@ -59,14 +59,8 @@ export default function AppShell({ subtitle, children }) {
           <span>Log Out</span>
         </button>
       </div>
-      ) : (
-        subtitle && (
-          <div className="app-shell__subbar app-shell__subbar--plain no-print">
-            <span>{subtitle}</span>
-          </div>
-        )
       )}
-
+      
       {status === "authed" && <SideNav open={navOpen} onClose={() => setNavOpen(false)} />}
 
       <main className="app-shell__body">{children}</main>

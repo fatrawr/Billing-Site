@@ -215,16 +215,18 @@
   width: 100%; padding: var(--space-2) var(--space-4); background: var(--color-forest-mid);
   display: flex; align-items: center; gap: var(--space-4);
 }
+.app-shell__subbar {
+  width: 100%; padding: var(--space-2) var(--space-4); background: var(--color-forest-mid);
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-4);
+}
 .app-shell__subbar span { font-family: var(--font-display); font-weight: 600; font-size: 13.5px; color: #f4f9f6; letter-spacing: 0.02em; }
-.app-shell__subbar--plain { justify-content: center; }
-.app-shell__subtitle { flex: 1; text-align: center; }
 .app-shell__hamburger {
   display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;
   border-radius: 9999px; border: none; background: rgba(255,255,255,0.12); color: #f4f9f6;
   cursor: pointer; flex: none; transition: background 150ms ease;
 }
 .app-shell__hamburger:hover { background: rgba(255,255,255,0.22); }
-.app-shell__tabs.animated-tabs { flex: none; }
+.app-shell__tabs.animated-tabs { justify-self: center; }
 .app-shell__tabs .animated-tabs__btn { color: rgba(244,249,246,0.75); }
 .app-shell__tabs .animated-tabs__btn:hover,
 .app-shell__tabs .animated-tabs__btn[data-checked="true"] { color: #f4f9f6; }
@@ -232,7 +234,7 @@
 .app-shell__logout {
   display: inline-flex; align-items: center; gap: 6px; border: none; background: rgba(255,255,255,0.12);
   color: #f4f9f6; border-radius: 9999px; padding: 7px 14px; font-size: 12.5px; font-weight: 600;
-  cursor: pointer; flex: none; transition: background 150ms ease;
+  cursor: pointer; flex: none; justify-self: end; transition: background 150ms ease;
 }
 .app-shell__logout:hover { background: rgba(255,255,255,0.22); }
 .app-shell__body { flex: 1; display: flex; align-items: center; justify-content: center; padding: var(--space-7) var(--space-4); background: var(--color-paper); }
