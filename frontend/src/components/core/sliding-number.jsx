@@ -1,71 +1,39 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion, useSpring, useTransform } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
-function Digit({ value, height, digitStyle }) {
-  const animatedValue = useSpring(value, { stiffness: 220, damping: 26, mass: 0.9 });
-
-  useEffect(() => {
-    animatedValue.set(value);
-  }, [animatedValue, value]);
-
+/**
+ * A single ticking digit: the incoming digit slides up from below while
+ * the outgoing one slides out above. No height measurement / no
+ * conditional hook trees — just AnimatePresence keyed by digit value.
+ */
+function Digit({ digit }) {
   return (
-    <div
-      style={{ height, position: 'relative', width: '1ch', overflow: 'hidden', ...digitStyle }}
-    >
-      {Array.from({ length: 10 }, (_, i) => (
-        <Number key={i} mv={animatedValue} number={i} height={height} />
-      ))}
-    </div>
+    <span className="sliding-digit">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={digit}
+          initial={{ y: 12, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -12, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 28, mass: 0.6 }}
+          className="sliding-digit__inner"
+        >
+          {digit}
+        </motion.span>
+      </AnimatePresence>
+    </span>
   );
 }
 
-function Number({ mv, number, height }) {
-  const y = useTransform(mv, (latest) => {
-    const offset = (10 + number - latest) % 10;
-    let memo = offset * height;
-    if (offset > 5) memo -= 10 * height;
-    return memo;
-  });
-
-  if (typeof window === 'undefined') return null;
-
-  return (
-    <motion.span
-      style={{
-        y,
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      {number}
-    </motion.span>
-  );
-}
-
-export function SlidingNumber({ value, padStart = false, className = '', digitStyle }) {
-  const ref = useRef(null);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    if (ref.current) setHeight(ref.current.getBoundingClientRect().height);
-  }, []);
-
+export function SlidingNumber({ value, padStart = false, className = '' }) {
   const digits = String(value).padStart(padStart ? 2 : 0, '0').split('');
 
   return (
-    <span ref={ref} className={className} style={{ display: 'inline-flex', position: 'relative' }}>
-      {height === 0 ? (
-        <span style={{ visibility: 'hidden' }}>{digits.join('')}</span>
-      ) : (
-        digits.map((d, i) => (
-          <Digit key={i} value={Number(d)} height={height} digitStyle={digitStyle} />
-        ))
-      )}
+    <span className={`sliding-number ${className}`}>
+      {digits.map((d, i) => (
+        <Digit key={i} digit={d} />
+      ))}
     </span>
   );
 }
