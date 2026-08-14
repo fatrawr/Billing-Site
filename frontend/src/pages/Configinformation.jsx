@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 
 const ALLOWED_USER = "fat123";
 const CONFIG_CODES = ["UR", "CM", "SC", "LP", "OM"];
@@ -157,8 +158,10 @@ export default function ConfigInformation() {
       setValues(v);
       setNotice("Saved successfully!");
       setError("");
+      notifySuccess("Config saved successfully");
     } catch (err) {
       setError(err.message);
+      notifyError("Save failed", err.message);
     }
   };
 

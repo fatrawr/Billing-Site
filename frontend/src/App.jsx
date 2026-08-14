@@ -46,6 +46,9 @@ const PAGE_TITLES = {
 
 function Shell({ children }) {
   const { pathname } = useLocation();
+  // The landing page owns its own nav/footer and shouldn't be wrapped
+  // in the internal app chrome (topbar/subbar).
+  if (pathname === "/") return children;
   return <AppShell subtitle={PAGE_TITLES[pathname] ?? ""}>{children}</AppShell>;
 }
 

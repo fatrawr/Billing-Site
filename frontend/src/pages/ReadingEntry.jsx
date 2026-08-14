@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 
 export default function ReadingEntry() {
   const navigate = useNavigate();
@@ -48,8 +49,15 @@ export default function ReadingEntry() {
     if (currRdg.trim().length > 7) { setError("Current reading cannot exceed 7 digits."); return false; }
     if (c < rec.prevRdg) { setError("Current reading cannot be less than previous reading."); return false; }
     setError("");
-    await api.saveReadingEntry(refs[idx], { currRdg: c, prevRdg: rec.prevRdg, month: targetMonth });
-    return true;
+    try {
+      await api.saveReadingEntry(refs[idx], { currRdg: c, prevRdg: rec.prevRdg, month: targetMonth });
+      notifySuccess("Reading saved");
+      return true;
+    } catch (e) {
+      setError(e.message);
+      notifyError("Save failed", e.message);
+      return false;
+    }
   };
 
   const goTo = async (i) => { setIdx(i); await load(refs[i], targetMonth); };

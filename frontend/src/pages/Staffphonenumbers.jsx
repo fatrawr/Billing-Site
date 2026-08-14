@@ -1,9 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js"
-import { useAuth } from "../components/AuthContext.jsx";;
+import { useAuth } from "../components/AuthContext.jsx";
+import { useConfirm } from "../components/ui/ConfirmDialog.jsx";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 
 export default function StaffPhoneNumbers() {
+  const confirmDialog = useConfirm();
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
 
@@ -60,9 +63,11 @@ export default function StaffPhoneNumbers() {
       await api.addStaff({ staffName: addName.trim(), phoneNumber: addPhone.trim() });
       setAddName(""); setAddPhone(""); setAddVisible(false);
       setNotice("Record added successfully!"); setError("");
+      notifySuccess("Record added successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Add failed", err.message);
     }
   };
 
@@ -78,20 +83,24 @@ export default function StaffPhoneNumbers() {
       await api.updateStaff({ id, staffName: editName.trim(), phoneNumber: editPhone.trim() });
       setEditingId(null);
       setNotice("Updated successfully!");
+      notifySuccess("Updated successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Update failed", err.message);
     }
   };
 
   const removeStaff = async (id) => {
-    if (!window.confirm("Delete this record?")) return;
+    if (!(await confirmDialog("Delete this record?"))) return;
     try {
       await api.deleteStaff({ id });
       setNotice("Deleted successfully!");
+      notifySuccess("Deleted successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Delete failed", err.message);
     }
   };
 

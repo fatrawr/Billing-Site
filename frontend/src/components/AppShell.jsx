@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { DoodleStarTrio } from "./Doodles.jsx";
+import { Clock } from "./Clock.jsx";
+import SiteFooter from "./SiteFooter.jsx";
 
 const SOCIETY_NAME = "The Co-operative Engineers Town Society Ltd., Lahore";
 
@@ -12,7 +14,6 @@ export default function AppShell({ subtitle, children }) {
   }, []);
 
   const dateStr = now.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
-  const timeStr = now.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
   return (
     <div className="app-shell">
@@ -23,7 +24,7 @@ export default function AppShell({ subtitle, children }) {
           <span className="app-shell__org">{SOCIETY_NAME}</span>
           <DoodleStarTrio className="app-shell__doodle" />
         </div>
-        <span className="app-shell__time">{timeStr}</span>
+        <Clock className="app-shell__time" />
       </header>
 
       {subtitle && (
@@ -33,6 +34,7 @@ export default function AppShell({ subtitle, children }) {
       )}
 
       <main className="app-shell__body">{children}</main>
+      <div className="no-print"><SiteFooter /></div>
     </div>
   );
 }

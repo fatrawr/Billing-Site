@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api.js";
 import AuthShell from "../components/Authshell.jsx";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 
 const DEPARTMENTS = ["Electrical Engineering", "Admin", "Misc."];
 
@@ -38,9 +39,11 @@ export default function SignUp() {
 
     try {
       await api.signup(form);
+      notifySuccess("Account created successfully");
       navigate("/login");
     } catch (err) {
       setError(err.message);
+      notifyError("Sign up failed", err.message);
     }
   };
 

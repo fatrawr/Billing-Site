@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 
 export default function PaymentEntry() {
   const navigate = useNavigate();
@@ -40,8 +41,15 @@ export default function PaymentEntry() {
     const err = validate();
     if (err) { setError(err); return false; }
     setError("");
-    await api.savePaymentEntry(refs[idx], form);
-    return true;
+    try {
+      await api.savePaymentEntry(refs[idx], form);
+      notifySuccess("Payment saved");
+      return true;
+    } catch (e) {
+      setError(e.message);
+      notifyError("Save failed", e.message);
+      return false;
+    }
   };
 
   const goTo = async (i) => {

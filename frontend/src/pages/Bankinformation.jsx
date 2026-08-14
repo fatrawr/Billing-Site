@@ -1,8 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { useConfirm } from "../components/ui/ConfirmDialog.jsx";
+import { notifySuccess, notifyError } from "../lib/toast.js";
+
 
 export default function BankInformation() {
+  const confirmDialog = useConfirm();
   const navigate = useNavigate();
 
   const [banks, setBanks] = useState([]);
@@ -58,9 +62,11 @@ export default function BankInformation() {
       await api.addBank({ bankName: addName.trim(), accountNo: addAcct.trim() });
       setAddName(""); setAddAcct(""); setAddVisible(false);
       setNotice("Record added successfully!"); setError("");
+      notifySuccess("Record added successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Add failed", err.message);
     }
   };
 
@@ -76,20 +82,24 @@ export default function BankInformation() {
       await api.updateBank({ id, bankName: editName.trim(), accountNo: editAcct.trim() });
       setEditingId(null);
       setNotice("Updated successfully!");
+      notifySuccess("Updated successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Update failed", err.message);
     }
   };
 
   const removeBank = async (id) => {
-    if (!window.confirm("Delete this record?")) return;
+    if (!(await confirmDialog("Delete this record?"))) return;
     try {
       await api.deleteBank({ id });
       setNotice("Deleted successfully!");
+      notifySuccess("Deleted successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Delete failed", err.message);
     }
   };
 

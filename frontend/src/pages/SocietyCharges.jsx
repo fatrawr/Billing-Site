@@ -2,10 +2,14 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext.jsx";
 import { api } from "../api.js";
+import { useConfirm } from "../components/ui/ConfirmDialog.jsx";
+import { notifySuccess, notifyError } from "../lib/toast.js";
+
 
 const EMPTY_AMOUNTS = { "2K": "", "1K": "", "10M": "" };
 
 export default function SocietyCharges() {
+  const confirmDialog = useConfirm();
   const navigate = useNavigate();
 
   const [charges, setCharges] = useState([]);
@@ -75,9 +79,11 @@ export default function SocietyCharges() {
       setAddVisible(false);
       setError("");
       setNotice("Record added successfully!");
+      notifySuccess("Record added successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Add failed", err.message);
     }
   };
 
@@ -95,20 +101,24 @@ export default function SocietyCharges() {
       await api.updateCharge({ description, amounts: editAmounts });
       setEditingDesc(null);
       setNotice("Record updated successfully!");
+      notifySuccess("Record updated successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Update failed", err.message);
     }
   };
 
   const removeCharge = async (description) => {
-    if (!window.confirm(`Delete all entries for '${description}'?`)) return;
+    if (!(await confirmDialog(`Delete all entries for '${description}'?`))) return;
     try {
       await api.deleteCharge({ description });
       setNotice("Deleted successfully!");
+      notifySuccess("Deleted successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Delete failed", err.message);
     }
   };
 

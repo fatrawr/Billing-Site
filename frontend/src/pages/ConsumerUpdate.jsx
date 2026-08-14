@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 import { useAuth } from "../components/AuthContext.jsx";
 
 const RESIDENTIAL_OPTIONS = ["Residential", "Commercial", "Semi Commercial"];
@@ -90,8 +91,10 @@ const EMPTY_NEW_METER = {
       await api.updateConsumer(consumer.referenceNo, form);
       setNotice("Record Successfully Updated!");
       setError("");
+      notifySuccess("Consumer updated successfully");
     } catch (err) {
       setError(err.message);
+      notifyError("Update failed", err.message);
     }
   };
 
@@ -115,8 +118,10 @@ const submitNewMeter = async () => {
     setAddingMeter(false);
     setNotice("Meter added successfully!");
     setError("");
+    notifySuccess("Meter added successfully");
   } catch (err) {
     setError(err.message);
+    notifyError("Add meter failed", err.message);
   }
 };
 
@@ -127,8 +132,10 @@ const submitNewMeter = async () => {
       setEditingMeterId(null);
       setNotice("Meter updated successfully!");
       setError("");
+      notifySuccess("Meter updated successfully");
     } catch (err) {
       setError(err.message);
+      notifyError("Update meter failed", err.message);
     }
   };
 

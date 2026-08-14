@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 import { useAuth } from "../components/AuthContext.jsx";
 
 const EMPTY_ADD = { month: "", rdgDate: "", issDate: "", dueDate: "" };
@@ -83,9 +84,11 @@ export default function BillingSchedule() {
       setAddVisible(false);
       setNotice("Record added successfully!");
       setError("");
+      notifySuccess("Record added successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Add failed", err.message);
     }
   };
 
@@ -107,9 +110,11 @@ export default function BillingSchedule() {
       await api.updateDate({ oldMonth, ...editForm });
       setEditingMonth(null);
       setNotice("Updated successfully!");
+      notifySuccess("Updated successfully");
       load();
     } catch (err) {
       setError(err.message);
+      notifyError("Update failed", err.message);
     }
   };
 

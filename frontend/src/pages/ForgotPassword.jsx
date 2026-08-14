@@ -1,20 +1,20 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 import AuthShell from "../components/Authshell.jsx";
+import OTPDialog from "../components/OTPDialog.jsx";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [stage, setStage] = useState("email"); // "email" | "code" | "password"
   const [email, setEmail] = useState("");
-  const [digits, setDigits] = useState(Array(6).fill(""));
   const [resetToken, setResetToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
-  const boxRefs = useRef([]);
 
   const sendCode = async (e) => {
     e.preventDefault();
@@ -24,71 +24,25 @@ export default function ForgotPassword() {
     setLoading(true);
     try {
       await api.sendResetCode({ email: email.trim() });
-      setDigits(Array(6).fill(""));
       setStage("code");
-      setNotice("Code sent — check your email.");
+      notifySuccess("Code sent", "Check your email for the verification code.");
     } catch (err) {
       setError(err.message);
+      notifyError("Could not send code", err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDigitChange = (i, value) => {
-    const v = value.replace(/[^0-9]/g, "").slice(-1);
-    const next = [...digits];
-    next[i] = v;
-    setDigits(next);
-    if (v && i < 5) boxRefs.current[i + 1]?.focus();
-  };
-
-  const handleDigitKeyDown = (i, e) => {
-    if (e.key === "Backspace" && !digits[i] && i > 0) {
-      boxRefs.current[i - 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e) => {
-    const pasted = e.clipboardData.getData("text").replace(/[^0-9]/g, "").slice(0, 6);
-    if (!pasted) return;
-    e.preventDefault();
-    const next = pasted.split("");
-    while (next.length < 6) next.push("");
-    setDigits(next);
-    boxRefs.current[Math.min(pasted.length, 5)]?.focus();
-  };
-
-  const verifyCode = async (e) => {
-    e.preventDefault();
-    setError(""); setNotice("");
-    const code = digits.join("");
-    if (code.length !== 6) return setError("Enter the 6-digit code.");
-
-    setLoading(true);
-    try {
-      const data = await api.verifyResetCode({ email: email.trim(), code });
-      setResetToken(data.resetToken);
-      setStage("password");
-      setNotice("Code verified — set your new password.");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  const verifyCode = async (code) => {
+    const data = await api.verifyResetCode({ email: email.trim(), code });
+    setResetToken(data.resetToken);
+    notifySuccess("Code verified", "Set your new password.");
   };
 
   const resendCode = async () => {
-    setError(""); setNotice("");
-    setLoading(true);
-    try {
-      await api.sendResetCode({ email: email.trim() });
-      setDigits(Array(6).fill(""));
-      setNotice("A new code has been sent.");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    await api.sendResetCode({ email: email.trim() });
+    notifySuccess("Code resent", "A new code has been sent to your email.");
   };
 
   const resetPasswordSubmit = async (e) => {
@@ -147,35 +101,19 @@ export default function ForgotPassword() {
       )}
 
       {stage === "code" && (
-        <form onSubmit={verifyCode}>
-          <div className="field">
-            <label>Enter the 6-digit code sent to {email}</label>
-            <div className="otp-row" onPaste={handlePaste}>
-              {digits.map((d, i) => (
-                <input
-                  key={i}
-                  ref={(el) => (boxRefs.current[i] = el)}
-                  className="otp-box"
-                  value={d}
-                  onChange={(e) => handleDigitChange(i, e.target.value)}
-                  onKeyDown={(e) => handleDigitKeyDown(i, e)}
-                  maxLength={1}
-                  inputMode="numeric"
-                  autoFocus={i === 0}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="button-row">
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? "Verifying…" : "Verify Code"}
-            </button>
-          </div>
-          <button type="button" className="link" style={{ marginTop: 14, background: "none", border: "none", cursor: "pointer" }} onClick={resendCode} disabled={loading}>
-            Resend code
-          </button>
-        </form>
+        <p className="welcome-copy">Check the popup to enter your verification code.</p>
       )}
+
+      <OTPDialog
+        open={stage === "code"}
+        email={email}
+        length={6}
+        onVerify={verifyCode}
+        onResend={resendCode}
+        onClose={() => {
+          if (resetToken) setStage("password");
+        }}
+      />
 
       {stage === "password" && (
         <form onSubmit={resetPasswordSubmit}>

@@ -1,6 +1,7 @@
 import { useState, useEffect  } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifySuccess, notifyError } from "../lib/toast.js";
 import { useAuth } from "../components/AuthContext.jsx";
 
 const RESIDENTIAL_OPTIONS = [
@@ -75,9 +76,11 @@ export default function ConsumerAdd() {
     try {
       await api.addConsumer(payload);
       setNotice("Record Successfully Added!");
+      notifySuccess("Consumer added successfully");
       setForm(EMPTY);
     } catch (err) {
       setError(err.message);
+      notifyError("Add failed", err.message);
     }
   };
 
