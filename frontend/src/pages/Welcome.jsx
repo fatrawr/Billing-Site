@@ -38,8 +38,6 @@ export default function Welcome() {
   const location = useLocation();
   const [showForm, setShowForm] = useState(false);
   const [refNo, setRefNo] = useState("");
-  const [month, setMonth] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -59,17 +57,14 @@ export default function Welcome() {
 
   const submit = async (e) => {
     e.preventDefault();
-    setError("");
 
-    if (refNo.length !== 9) return setError("Reference number must be exactly 9 digits.");
-    if (!month) return setError("Please select the bill month.");
+    if (refNo.length !== 9) return notifyError("Reference number must be exactly 9 digits.");
 
     setLoading(true);
     try {
-      const { bills } = await api.previewBills({ from: refNo, month });
+      const { bills } = await api.previewBills({ from: refNo });
       navigate("/menu/bills/preview", { state: { bills } });
     } catch (err) {
-      setError(err.message);
       notifyError("Could not generate bill", err.message);
     } finally {
       setLoading(false);
@@ -78,7 +73,31 @@ export default function Welcome() {
 
   return (
     <div className="landing">
-      <section className="hero" >
+      <div className="landing__nav-wrap">
+        <motion.nav
+          className="hero__nav"
+          initial="hidden"
+          animate="visible"
+          variants={navVariants}
+        >
+          <div className="hero__nav-brand">
+            <img src="/logo.png" alt="Society logo" />
+            <span>{SOCIETY_NAME}</span>
+          </div>
+
+          <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="hero__nav-tabs" />
+
+          <div className="hero__nav-right">
+            <Clock className="hero__clock" />
+            <Link className="hero__login-btn" to="/login">
+              <ShieldCheck size={15} />
+              Login as Admin
+            </Link>
+          </div>
+        </motion.nav>
+      </div>
+
+      <section className="hero">
         <motion.div
           className="hero__inner"
           initial="hidden"
@@ -91,23 +110,6 @@ export default function Welcome() {
             alt=""
             className="hero__bg"
           />
-
-          <motion.nav variants={navVariants} className="hero__nav">
-            <div className="hero__nav-brand">
-              <img src="/logo.png" alt="Society logo" />
-              <span>{SOCIETY_NAME}</span>
-            </div>
-
-            <AnimatedTabs tabs={TABS} defaultValue="Home" onSelect={goToTab} className="hero__nav-tabs" />
-
-            <div className="hero__nav-right">
-              <Clock className="hero__clock" />
-              <Link className="hero__login-btn" to="/login">
-                <ShieldCheck size={15} />
-                Login as Admin
-              </Link>
-            </div>
-          </motion.nav>
 
           <div className="hero__body">
             <div className="hero__copy">
@@ -132,14 +134,13 @@ export default function Welcome() {
               ) : (
                 <form className="generate-bill-card" onSubmit={submit}>
                   <button
-  type="button"
-  className="generate-bill-card__close"
-  aria-label="Close"
-  onClick={() => { setShowForm(false); setError(""); setRefNo(""); }}
->
-  <X size={16} />
-</button>
-                  {error && <div className="flash error">{error}</div>}
+                    type="button"
+                    className="generate-bill-card__close"
+                    aria-label="Close"
+                    onClick={() => { setShowForm(false); setRefNo(""); }}
+                  >
+                    <X size={16} />
+                  </button>
 
                   <div className="field">
                     <label>Reference Number (9 digits)</label>
@@ -152,11 +153,6 @@ export default function Welcome() {
                       autoFocus
                       required
                     />
-                  </div>
-
-                  <div className="field">
-                    <label>Bill Month</label>
-                    <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} required />
                   </div>
 
                   <div className="button-row">

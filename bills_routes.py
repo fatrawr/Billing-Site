@@ -167,21 +167,34 @@ def _build_payload(db, ref_no, month, silent=False):
     return payload, None
 
 
+def _latest_month_for(db, ref_no):
+    row = (
+        db.query(MasterTbl)
+        .filter_by(ReferenceNo=ref_no)
+        .order_by(MasterTbl.Yyyymm.desc())
+        .first()
+    )
+    return row.Yyyymm if row else None
+
+
 @bills_bp.route("/preview", methods=["GET"])
-#@admin_required
+# Public: no login required — guests can look up a bill from the landing page.
 def preview_bills():
-    month_str = request.args.get("month", "")
+    month_str = request.args.get("month", "").strip()
     from_ref = request.args.get("from", "")
     to_ref = request.args.get("to", "")
 
-    try:
-        yyyy_str, mm_str = month_str.split("-")
-        mm, yyyy = int(mm_str), int(yyyy_str)
-        if mm < 1 or mm > 12 or yyyy < 2000:
-            raise ValueError
-    except (ValueError, AttributeError):
-        return jsonify({"error": "Invalid month format. Use MM/YYYY (e.g. 05/2026)."}), 400
-    month = yyyy * 100 + mm
+    month = None
+    if month_str:
+        try:
+            yyyy_str, mm_str = month_str.split("-")
+            mm, yyyy = int(mm_str), int(yyyy_str)
+            if mm < 1 or mm > 12 or yyyy < 2000:
+                raise ValueError
+        except (ValueError, AttributeError):
+            return jsonify({"error": "Invalid month format. Use MM/YYYY (e.g. 05/2026)."}), 400
+        month = yyyy * 100 + mm
+    # month left as None means: use each consumer's latest billed month.
 
     if not from_ref.strip().isdigit():
         return jsonify({"error": "From Reference Number must be numeric."}), 400
@@ -190,13 +203,16 @@ def preview_bills():
     db = SessionLocal()
     try:
         if from_ref == 0:
-            if not db.query(MasterTbl).filter_by(Yyyymm=month).first():
+            if month is not None and not db.query(MasterTbl).filter_by(Yyyymm=month).first():
                 return jsonify({"error": f"No billing data found for {format_month(month)}."}), 404
 
             all_refs = [r.ReferenceNo for r in db.query(ConsumerTbl).order_by(ConsumerTbl.ReferenceNo).all()]
             bills = []
             for ref in all_refs:
-                payload, _ = _build_payload(db, ref, month, silent=True)
+                ref_month = month if month is not None else _latest_month_for(db, ref)
+                if ref_month is None:
+                    continue
+                payload, _ = _build_payload(db, ref, ref_month, silent=True)
                 if payload is not None:
                     bills.append(payload)
 
@@ -204,9 +220,12 @@ def preview_bills():
                 return jsonify({"error": "No consumers have billing data for this month."}), 400
 
             return jsonify({"bills": bills}), 200
-        
+
         if not to_ref.strip():
-            payload, error = _build_payload(db, from_ref, month)
+            resolved_month = month if month is not None else _latest_month_for(db, from_ref)
+            if resolved_month is None:
+                return jsonify({"error": f"No billing history found for {from_ref}."}), 404
+            payload, error = _build_payload(db, from_ref, resolved_month)
             if payload is None:
                 return jsonify({"error": error or "Could not build this bill."}), 400
             return jsonify({"bills": [payload]}), 200
@@ -230,12 +249,15 @@ def preview_bills():
         if not refs_in_range:
             return jsonify({"error": f"No consumers found between {from_ref} and {to_ref}."}), 404
 
-        if not db.query(MasterTbl).filter_by(Yyyymm=month).first():
+        if month is not None and not db.query(MasterTbl).filter_by(Yyyymm=month).first():
             return jsonify({"error": f"No billing data found for {format_month(month)}."}), 404
 
         bills = []
         for ref in refs_in_range:
-            payload, _ = _build_payload(db, ref, month, silent=True)
+            ref_month = month if month is not None else _latest_month_for(db, ref)
+            if ref_month is None:
+                continue
+            payload, _ = _build_payload(db, ref, ref_month, silent=True)
             if payload is not None:
                 bills.append(payload)
 

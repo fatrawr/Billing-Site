@@ -20,6 +20,7 @@ from config_routes import config_bp
 from customer_routes import consumers_bp
 from payment_routes import payment_bp
 from reading_routes import reading_bp
+from reports_routes import reports_bp
 from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
@@ -97,6 +98,7 @@ app.register_blueprint(config_bp, url_prefix="/api/config")
 app.register_blueprint(consumers_bp, url_prefix="/api/consumers")
 app.register_blueprint(payment_bp, url_prefix="/api/payments")
 app.register_blueprint(reading_bp, url_prefix="/api/readings")
+app.register_blueprint(reports_bp, url_prefix="/api/reports")
 
 # Ensure schema exists on cold start (no-op if tables already present)
 try:

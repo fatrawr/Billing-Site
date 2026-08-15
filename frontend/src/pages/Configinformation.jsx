@@ -24,8 +24,6 @@ export default function ConfigInformation() {
   const [rows, setRows] = useState([]);
   const [values, setValues] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
   const [dirty, setDirty] = useState(false);
 
   // "latest" = viewing/editing the current saved month
@@ -56,9 +54,8 @@ export default function ConfigInformation() {
       const v = {};
       data.rows.forEach((r) => { v[r.configCode] = String(r.configValue); });
       setValues(v);
-      setError("");
     } catch (err) {
-      setError(err.message);
+      notifyError("Could not load configuration", err.message);
     } finally {
       setLoading(false);
     }
@@ -93,7 +90,6 @@ export default function ConfigInformation() {
   const updateValue = (code, raw) => {
     setValues((v) => ({ ...v, [code]: raw.replace(/[^0-9.]/g, "") }));
     setDirty(true);
-    setNotice("");
   };
 
   const checkPreviousMonth = async () => {
@@ -109,10 +105,9 @@ export default function ConfigInformation() {
       const v = {};
       data.rows.forEach((r) => { v[r.configCode] = String(r.configValue); });
       setValues(v);
-      setError(data.rows.length === 0 ? `No config found for ${data.monthDisplay}.` : "");
-      setNotice("");
+      if (data.rows.length === 0) notifyError(`No config found for ${data.monthDisplay}.`);
     } catch (err) {
-      setError(err.message);
+      notifyError("Could not load previous month", err.message);
     }
   };
 
@@ -133,8 +128,7 @@ export default function ConfigInformation() {
     setValues(v);
     setMode("draft");
     setDirty(false);
-    setNotice("Draft created — edit values below, then Save to write to the database.");
-    setError("");
+    notifySuccess("Draft created", "Edit values below, then Save to write to the database.");
   };
 
   const saveAll = async () => {
@@ -156,11 +150,8 @@ export default function ConfigInformation() {
       const v = {};
       data.rows.forEach((r) => { v[r.configCode] = String(r.configValue); });
       setValues(v);
-      setNotice("Saved successfully!");
-      setError("");
       notifySuccess("Config saved successfully");
     } catch (err) {
-      setError(err.message);
       notifyError("Save failed", err.message);
     }
   };
@@ -222,9 +213,6 @@ export default function ConfigInformation() {
           ? `${mode === "draft" ? "Draft (unsaved)" : "Viewing"}: ${monthDisplay}${dirty ? " — unsaved changes" : ""}`
           : "No configuration set up yet"}
       </p>
-
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
 
       <div className="charges-table charges-table--config">
         <div className="charges-table__header">

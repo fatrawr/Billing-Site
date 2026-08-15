@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   X, Home, Mail, LayoutGrid, Users, Coins, Landmark, Phone,
-  CalendarDays, Settings, Receipt, ChevronRight,
+  CalendarDays, Settings, Receipt, FileBarChart, ChevronRight,
 } from "lucide-react";
 import { useAuth } from "./AuthContext.jsx";
 
@@ -27,13 +27,15 @@ const NAV_TREE = [
   {
     type: "category", name: "Bills Processing", icon: Receipt,
     children: [
-      {name: "Populate Payment Table", to: "/menu/bills/populate-payment", adminOnly: true },
-      {name: "Populate Reading Table", to: "/menu/bills/populate-reading", adminOnly: true },
       { name: "Payment Entry", to: "/menu/bills/payment-entry", adminOnly: true },
       { name: "Reading Entry", to: "/menu/bills/reading-entry", adminOnly: true },
-      {name: "Payment Posting", to: "/menu/bills/payment-posting", adminOnly: true },
-      {name: "Reading Posting", to: "/menu/bills/reading-posting", adminOnly: true },
       { name: "Bill Generation", to: "/menu/bills/generate" },
+    ],
+  },
+  {
+    type: "category", name: "Reports", icon: FileBarChart,
+    children: [
+      { name: "List of Consumers", to: "/menu/reports/consumers" },
     ],
   },
 ];

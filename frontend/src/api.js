@@ -80,4 +80,9 @@ bulkSaveConfig: (payload) => request("/config/bulk-save", { method: "POST", body
   getReadingEntryInit: () => request("/readings/entry/init"),
   getReadingEntry: (ref) => request(`/readings/entry/${ref}`),
   saveReadingEntry: (ref, payload) => request(`/readings/entry/${ref}`, { method: "PUT", body: payload }),
+
+  getConsumersReport: (params) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/reports/consumers?${qs}`);
+  },
 };

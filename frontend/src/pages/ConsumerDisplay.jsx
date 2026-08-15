@@ -1,32 +1,25 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifyError } from "../lib/toast.js";
 
 export default function ConsumerDisplay() {
   const navigate = useNavigate();
   const [refNo, setRefNo] = useState("");
   const [result, setResult] = useState(null); // { consumer, meters }
-  const [error, setError] = useState("");
 
   const search = async (e) => {
     e?.preventDefault();
-    setError("");
-    if (!refNo.trim()) return setError("Please enter a Reference No.");
+    if (!refNo.trim()) return notifyError("Please enter a Reference No.");
 
     try {
       const data = await api.getConsumerDisplay(refNo.trim());
       setResult(data);
     } catch (err) {
       setResult(null);
-      setError(err.message);
+      notifyError("Search failed", err.message);
     }
   };
-
-  useEffect(() => {
-  if (!error ) return;
-  const t = setTimeout(() => { setNotice(""); }, 5000);
-  return () => clearTimeout(t);
-}, [error]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -48,8 +41,6 @@ export default function ConsumerDisplay() {
     <div className="dashboard dashboard--wide">
       <h1 className="dashboard__title">Display Record</h1>
       <p className="dashboard__subtitle">Read-only lookup by Reference No.</p>
-
-      {error && <div className="flash error">{error}</div>}
 
       <form onSubmit={search} className="button-row" style={{ marginBottom: 24 }}>
         <input

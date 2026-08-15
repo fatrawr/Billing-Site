@@ -36,8 +36,6 @@ const sanitizeDateInput = (value) => {
 export default function ConsumerAdd() {
   const navigate = useNavigate();
   const [form, setForm] = useState(EMPTY);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
   const { isAdmin } = useAuth();
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -45,19 +43,17 @@ export default function ConsumerAdd() {
 
   const submit = async (e) => {
     e?.preventDefault();
-    setError(""); setNotice("");
 
-    if (form.referenceNo.length !== 9) return setError("Reference No. must be exactly 9 digits!");
-    if (!form.name.trim()) return setError("Name is required!");
-    if (/^\d+$/.test(form.name.trim())) return setError("Name cannot be only numbers.");
-    if (/^\d+$/.test(form.address.trim())) return setError("Address cannot be only numbers.");
-    // if (form.name.trim().length > 30) return setError("Name must be less than or equal to 30 characters!");
-    if (!/^20\d{2}-/.test(form.connectionDate)) return setError("Connection Date year must start with 20.");
-    if (!form.address.trim()) return setError("Address is required!");
-    if (form.address.trim().length > 100) return setError("Address must be less than or equal to 100 characters!");
-    if (form.meterNumber.length !== 7) return setError("Meter Number must be exactly 7 digits!");
-    if (!form.initialReading || form.initialReading.length > 6) return setError("Meter Reading must be <= 6 digits!");
-    if (!form.connectionDate) return setError("Connection Date is required!");
+    if (form.referenceNo.length !== 9) return notifyError("Reference No. must be exactly 9 digits!");
+    if (!form.name.trim()) return notifyError("Name is required!");
+    if (/^\d+$/.test(form.name.trim())) return notifyError("Name cannot be only numbers.");
+    if (/^\d+$/.test(form.address.trim())) return notifyError("Address cannot be only numbers.");
+    if (!/^20\d{2}-/.test(form.connectionDate)) return notifyError("Connection Date year must start with 20.");
+    if (!form.address.trim()) return notifyError("Address is required!");
+    if (form.address.trim().length > 100) return notifyError("Address must be less than or equal to 100 characters!");
+    if (form.meterNumber.length !== 7) return notifyError("Meter Number must be exactly 7 digits!");
+    if (!form.initialReading || form.initialReading.length > 6) return notifyError("Meter Reading must be <= 6 digits!");
+    if (!form.connectionDate) return notifyError("Connection Date is required!");
 
     // Payload keys match WConsumer_Tbl / WMeterDetail_Tbl column names
     const payload = {
@@ -75,43 +71,28 @@ export default function ConsumerAdd() {
 
     try {
       await api.addConsumer(payload);
-      setNotice("Record Successfully Added!");
       notifySuccess("Consumer added successfully");
       setForm(EMPTY);
     } catch (err) {
-      setError(err.message);
       notifyError("Add failed", err.message);
     }
   };
-
-useEffect(() => {
-  if (!error && !notice) return;
-  const t = setTimeout(() => { setError(""); setNotice(""); }, 5000);
-  return () => clearTimeout(t);
-}, [error, notice]);
 
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "F1") { e.preventDefault(); submit(); }
       if (e.key === "F9") { e.preventDefault(); setForm(EMPTY); }
       if (e.key === "F10") { e.preventDefault(); navigate("/menu/consumers"); }
-      if (!error && !notice) return;
-  
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, navigate]);
 
-  
-
   return (
     <div className="dashboard dashboard--narrow">
       <h1 className="dashboard__title">Add New Consumer</h1>
       <p className="dashboard__subtitle">Register a new consumer and their first meter</p>
-
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
 
       <form onSubmit={submit}>
         <div className="field">

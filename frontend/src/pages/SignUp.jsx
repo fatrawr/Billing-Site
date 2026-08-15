@@ -13,7 +13,6 @@ export default function SignUp() {
     name: "", email: "", department: "", userId: "",
     password: "", confirmPassword: "",
   });
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,14 +25,12 @@ export default function SignUp() {
 
   const submit = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
     try {
       await api.signup(form);
       notifySuccess("Account created successfully");
       navigate("/login");
     } catch (err) {
-      setError(err.message);
       notifyError("Sign up failed", err.message);
     } finally {
       setLoading(false);
@@ -48,8 +45,6 @@ export default function SignUp() {
       wide
       footer={<Link className="back-link" to="/">Click here to go back</Link>}
     >
-      {error && <div className="flash error">{error}</div>}
-
       <form onSubmit={submit} className="auth-card__form">
         <div className="icon-field">
           <UserCircle className="icon-field__icon" size={16} />

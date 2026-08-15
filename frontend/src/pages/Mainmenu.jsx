@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Tile from "../components/Tile.jsx";
-import { api } from "../api.js";
 import { useAuth } from "../components/AuthContext.jsx"; 
 
 const ACCENTS = {
@@ -18,11 +17,14 @@ const ITEMS = [
   { number: 5, title: "Billing Schedule",     subtitle: "Set billing dates",         accent: ACCENTS.forest, to: "/menu/dates" },
   { number: 6, title: "Configuration Setting",   subtitle: "Enter configurations",      accent: ACCENTS.navy,   to: "/menu/config" },
   { number: 7, title: "Bills Processing",     subtitle: "Bills Process",             accent: ACCENTS.forest, to: "/menu/bills" },
+  { number: 8, title: "Reports",              subtitle: "Consumer & billing reports", accent: ACCENTS.navy,   to: "/menu/reports" },
 ];
 
 export default function MainMenu() {
   const navigate = useNavigate();
   const { logout: doLogout } = useAuth();
+
+  const logout = async () => { await doLogout(); navigate("/"); };
 
   useEffect(() => {
     const onKey = async (e) => {
@@ -30,15 +32,13 @@ export default function MainMenu() {
       if (item) navigate(item.to);
       if (e.key === "F10" || e.key === "Escape") {
         e.preventDefault();
-        try { await api.logout(); } catch { /* ignore */ }
-        navigate("/login");
+        await logout();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
-
-  const logout = async () => { await doLogout(); navigate("/"); };
 
   return (
     <div className="dashboard">

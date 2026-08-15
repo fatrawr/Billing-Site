@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
+import { notifyError } from "../lib/toast.js";
 
 export default function BillGenerate() {
   const navigate = useNavigate();
   const [fromRef, setFromRef] = useState("");
   const [toRef, setToRef] = useState("");
   const [month, setMonth] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const digitsOnly = (v) => v.replace(/[^0-9]/g, "");
@@ -31,10 +31,9 @@ export default function BillGenerate() {
 
   const generate = async (e) => {
     e?.preventDefault();
-    setError("");
 
-    if (!month) return setError("Please enter bill month in MM/YYYY format.");
-    if (!fromRef.trim()) return setError("Please enter a From Reference Number.");
+    if (!month) return notifyError("Please enter bill month in MM/YYYY format.");
+    if (!fromRef.trim()) return notifyError("Please enter a From Reference Number.");
 
     setLoading(true);
     try {
@@ -44,7 +43,7 @@ export default function BillGenerate() {
       const { bills } = await api.previewBills(params);
       navigate("/menu/bills/preview", { state: { bills } });
     } catch (err) {
-      setError(err.message);
+      notifyError("Could not generate bill", err.message);
     } finally {
       setLoading(false);
     }
@@ -54,8 +53,6 @@ export default function BillGenerate() {
     <div className="dashboard dashboard--narrow">
       <h1 className="dashboard__title">Bill Generation</h1>
       <p className="dashboard__subtitle">Generate a printable bill or a range of bills</p>
-
-      {error && <div className="flash error">{error}</div>}
 
       <form onSubmit={generate} className="auth-shell__body" style={{ padding: 0 }}>
         <div className="field">

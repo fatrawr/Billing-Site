@@ -12,8 +12,6 @@ export default function StaffPhoneNumbers() {
 
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
 
   const [addVisible, setAddVisible] = useState(false);
   const [addName, setAddName] = useState("");
@@ -27,9 +25,8 @@ export default function StaffPhoneNumbers() {
     setLoading(true);
     try {
       setStaff(await api.getStaff());
-      setError("");
     } catch (err) {
-      setError(err.message);
+      notifyError("Could not load staff", err.message);
     } finally {
       setLoading(false);
     }
@@ -56,17 +53,15 @@ export default function StaffPhoneNumbers() {
 
   const digitsOnly = (v) => v.replace(/[^0-9]/g, "").slice(0, 11);
 
-  const openAdd = () => { setAddVisible(true); setError(""); setNotice(""); };
+  const openAdd = () => { setAddVisible(true); };
 
   const submitAdd = async () => {
     try {
       await api.addStaff({ staffName: addName.trim(), phoneNumber: addPhone.trim() });
       setAddName(""); setAddPhone(""); setAddVisible(false);
-      setNotice("Record added successfully!"); setError("");
       notifySuccess("Record added successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Add failed", err.message);
     }
   };
@@ -75,18 +70,15 @@ export default function StaffPhoneNumbers() {
     setEditingId(row.id);
     setEditName(row.staffName);
     setEditPhone(row.phoneNumber);
-    setError(""); setNotice("");
   };
 
   const saveEdit = async (id) => {
     try {
       await api.updateStaff({ id, staffName: editName.trim(), phoneNumber: editPhone.trim() });
       setEditingId(null);
-      setNotice("Updated successfully!");
       notifySuccess("Updated successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Update failed", err.message);
     }
   };
@@ -95,11 +87,9 @@ export default function StaffPhoneNumbers() {
     if (!(await confirmDialog("Delete this record?"))) return;
     try {
       await api.deleteStaff({ id });
-      setNotice("Deleted successfully!");
       notifySuccess("Deleted successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Delete failed", err.message);
     }
   };
@@ -108,9 +98,6 @@ export default function StaffPhoneNumbers() {
     <div className="dashboard dashboard--wide">
       <h1 className="dashboard__title">Staff Phone Numbers</h1>
       <p className="dashboard__subtitle">Contact directory for society staff</p>
-
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
 
       <div className="charges-table charges-table--staff">
         <div className="charges-table__header">

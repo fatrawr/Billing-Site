@@ -27,8 +27,6 @@ export default function ConsumerUpdate() {
   const [consumer, setConsumer] = useState(null);
   const [meters, setMeters] = useState([]);
   const [form, setForm] = useState(null); // consumer edit fields
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
 
   const [editingMeterId, setEditingMeterId] = useState(null);
   const [meterForm, setMeterForm] = useState(null);
@@ -44,8 +42,7 @@ const EMPTY_NEW_METER = {
 
   const search = async (e) => {
     e?.preventDefault();
-    setError(""); setNotice("");
-    if (!refNo.trim()) return setError("Please enter a Reference No.");
+    if (!refNo.trim()) return notifyError("Please enter a Reference No.");
 
     try {
       const data = await api.getConsumer(refNo.trim());
@@ -59,15 +56,9 @@ const EMPTY_NEW_METER = {
       });
     } catch (err) {
       setConsumer(null);
-      setError(err.message);
+      notifyError("Search failed", err.message);
     }
   };
-
-  useEffect(() => {
-  if (!error && !notice) return;
-  const t = setTimeout(() => { setError(""); setNotice(""); }, 5000);
-  return () => clearTimeout(t);
-}, [error, notice]);
 
   useEffect(() => {
   const onKey = (e) => {
@@ -89,11 +80,8 @@ const EMPTY_NEW_METER = {
     e.preventDefault();
     try {
       await api.updateConsumer(consumer.referenceNo, form);
-      setNotice("Record Successfully Updated!");
-      setError("");
       notifySuccess("Consumer updated successfully");
     } catch (err) {
-      setError(err.message);
       notifyError("Update failed", err.message);
     }
   };
@@ -116,11 +104,8 @@ const submitNewMeter = async () => {
     const data = await api.addMeter(consumer.referenceNo, newMeterForm);
     setMeters(data.meters);
     setAddingMeter(false);
-    setNotice("Meter added successfully!");
-    setError("");
     notifySuccess("Meter added successfully");
   } catch (err) {
-    setError(err.message);
     notifyError("Add meter failed", err.message);
   }
 };
@@ -130,11 +115,8 @@ const submitNewMeter = async () => {
       const data = await api.updateMeter(consumer.referenceNo, meterNo, meterForm);
       setMeters(data.meters);
       setEditingMeterId(null);
-      setNotice("Meter updated successfully!");
-      setError("");
       notifySuccess("Meter updated successfully");
     } catch (err) {
-      setError(err.message);
       notifyError("Update meter failed", err.message);
     }
   };
@@ -143,9 +125,6 @@ const submitNewMeter = async () => {
     <div className="dashboard dashboard--wide">
       <h1 className="dashboard__title">Update Record</h1>
       <p className="dashboard__subtitle">Search a consumer, then edit their details or meters</p>
-
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
 
       <form onSubmit={search} className="button-row" style={{ marginBottom: 24 }}>
         <input

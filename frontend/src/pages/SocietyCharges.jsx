@@ -14,8 +14,6 @@ export default function SocietyCharges() {
 
   const [charges, setCharges] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
 
   const [addVisible, setAddVisible] = useState(false);
   const [addDesc, setAddDesc] = useState("");
@@ -30,9 +28,8 @@ export default function SocietyCharges() {
     try {
       const data = await api.getCharges();
       setCharges(data);
-      setError("");
     } catch (err) {
-      setError(err.message);
+      notifyError("Could not load charges", err.message);
     } finally {
       setLoading(false);
     }
@@ -62,27 +59,22 @@ export default function SocietyCharges() {
 
   const openAdd = () => {
     setAddVisible(true);
-    setNotice("");
-    setError("");
   };
 
   const submitAdd = async () => {
     const desc = addDesc.trim();
-    if (!desc) return setError("Description is required.");
+    if (!desc) return notifyError("Description is required.");
     const hasAny = Object.values(addAmounts).some((v) => v.trim() !== "");
-    if (!hasAny) return setError("Enter at least one amount (2K, 1K, or 10 Marla).");
+    if (!hasAny) return notifyError("Enter at least one amount (2K, 1K, or 10 Marla).");
 
     try {
       await api.addCharge({ description: desc, amounts: addAmounts });
       setAddDesc("");
       setAddAmounts(EMPTY_AMOUNTS);
       setAddVisible(false);
-      setError("");
-      setNotice("Record added successfully!");
       notifySuccess("Record added successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Add failed", err.message);
     }
   };
@@ -90,8 +82,6 @@ export default function SocietyCharges() {
   const startEdit = (row) => {
     setEditingDesc(row.description);
     setEditAmounts({ "2K": row["2K"], "1K": row["1K"], "10M": row["10M"] });
-    setNotice("");
-    setError("");
   };
 
   const cancelEdit = () => setEditingDesc(null);
@@ -100,11 +90,9 @@ export default function SocietyCharges() {
     try {
       await api.updateCharge({ description, amounts: editAmounts });
       setEditingDesc(null);
-      setNotice("Record updated successfully!");
       notifySuccess("Record updated successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Update failed", err.message);
     }
   };
@@ -113,11 +101,9 @@ export default function SocietyCharges() {
     if (!(await confirmDialog(`Delete all entries for '${description}'?`))) return;
     try {
       await api.deleteCharge({ description });
-      setNotice("Deleted successfully!");
       notifySuccess("Deleted successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Delete failed", err.message);
     }
   };
@@ -126,9 +112,6 @@ export default function SocietyCharges() {
     <div className="dashboard dashboard--wide">
       <h1 className="dashboard__title">Society Charges Details</h1>
       <p className="dashboard__subtitle">Manage per-category charge amounts</p>
-
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
 
       <div className="charges-table">
         <div className="charges-table__header">

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { CheckIcon, MailIcon } from "lucide-react";
+import { notifyError } from "../lib/toast.js";
 
 const TIMER_SECONDS = 10 * 60; // 10 minutes
 
@@ -17,7 +18,6 @@ const TIMER_SECONDS = 10 * 60; // 10 minutes
 export default function OTPDialog({ open, email, length = 6, onVerify, onResend, onClose }) {
   const [digits, setDigits] = useState(Array(length).fill(""));
   const [status, setStatus] = useState("idle"); // idle | verifying | success | error
-  const [errorMsg, setErrorMsg] = useState("");
   const [seconds, setSeconds] = useState(TIMER_SECONDS);
   const boxRefs = useRef([]);
 
@@ -25,7 +25,6 @@ export default function OTPDialog({ open, email, length = 6, onVerify, onResend,
     if (!open) return;
     setDigits(Array(length).fill(""));
     setStatus("idle");
-    setErrorMsg("");
     setSeconds(TIMER_SECONDS);
   }, [open, length]);
 
@@ -57,13 +56,12 @@ export default function OTPDialog({ open, email, length = 6, onVerify, onResend,
 
   const submit = async (code) => {
     setStatus("verifying");
-    setErrorMsg("");
     try {
       await onVerify(code);
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setErrorMsg(err?.message || "Invalid code. Please try again.");
+      notifyError("Verification failed", err?.message || "Invalid code. Please try again.");
       setDigits(Array(length).fill(""));
       boxRefs.current[0]?.focus();
     }
@@ -72,7 +70,6 @@ export default function OTPDialog({ open, email, length = 6, onVerify, onResend,
   const handleResend = async () => {
     setDigits(Array(length).fill(""));
     setStatus("idle");
-    setErrorMsg("");
     setSeconds(TIMER_SECONDS);
     await onResend?.();
   };
@@ -117,10 +114,6 @@ export default function OTPDialog({ open, email, length = 6, onVerify, onResend,
                 />
               ))}
             </div>
-
-            {status === "error" && (
-              <p className="flash error" style={{ marginTop: 14 }}>{errorMsg}</p>
-            )}
 
             <p className="otp-dialog__timer">
               {expired ? (

@@ -9,7 +9,6 @@ export default function PaymentEntry() {
   const [idx, setIdx] = useState(-1);
   const [targetMonth, setTargetMonth] = useState(null);
   const [form, setForm] = useState({ paymentDue: 0, paymentMade: "0", paymentDate: "" });
-  const [error, setError] = useState("");
   const [searchMode, setSearchMode] = useState(false);
   const [searchVal, setSearchVal] = useState("");
 
@@ -27,7 +26,7 @@ export default function PaymentEntry() {
         const i = init.refNumbers.indexOf(init.startRef);
         setIdx(i);
         await load(init.startRef);
-      } catch (err) { setError(err.message); }
+      } catch (err) { notifyError("Could not load payment entry", err.message); }
     })();
   }, [load]);
 
@@ -39,14 +38,12 @@ export default function PaymentEntry() {
 
   const save = async () => {
     const err = validate();
-    if (err) { setError(err); return false; }
-    setError("");
+    if (err) { notifyError(err); return false; }
     try {
       await api.savePaymentEntry(refs[idx], form);
       notifySuccess("Payment saved");
       return true;
     } catch (e) {
-      setError(e.message);
       notifyError("Save failed", e.message);
       return false;
     }
@@ -60,17 +57,17 @@ export default function PaymentEntry() {
   const goNext = async () => {
     if (!(await save())) return;
     if (idx + 1 < refs.length) goTo(idx + 1);
-    else setError("This is the last record.");
+    else notifyError("This is the last record.");
   };
-  const goPrev = () => (idx - 1 >= 0 ? goTo(idx - 1) : setError("This is the first record."));
+  const goPrev = () => (idx - 1 >= 0 ? goTo(idx - 1) : notifyError("This is the first record."));
   const goFirst = () => goTo(0);
   const goLast = () => goTo(refs.length - 1);
 
   const runSearch = () => {
     const ref = parseInt(searchVal, 10);
     const i = refs.indexOf(ref);
-    if (i === -1) setError("Reference number not found.");
-    else { setError(""); goTo(i); }
+    if (i === -1) notifyError("Reference number not found.");
+    else goTo(i);
     setSearchMode(false);
   };
 
@@ -97,7 +94,6 @@ export default function PaymentEntry() {
   if (idx === -1) return (
     <div className="dashboard dashboard--narrow">
       <h1 className="dashboard__title">Payment Entry</h1>
-      {error && <div className="flash error">{error}</div>}
     </div>
   );
 
@@ -105,8 +101,6 @@ export default function PaymentEntry() {
     <div className="dashboard dashboard--narrow">
       <h1 className="dashboard__title">Payment Entry</h1>
       <p className="dashboard__subtitle">Billing month {targetMonth} — record {idx + 1} of {refs.length}</p>
-
-      {error && <div className="flash error">{error}</div>}
 
       <div className="payment-entry-card">
         <div className="field">

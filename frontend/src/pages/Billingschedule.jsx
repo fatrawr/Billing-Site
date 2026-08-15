@@ -34,8 +34,6 @@ export default function BillingSchedule() {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
 
   const [addVisible, setAddVisible] = useState(false);
   const [addForm, setAddForm] = useState(EMPTY_ADD);
@@ -48,9 +46,8 @@ export default function BillingSchedule() {
     setLoading(true);
     try {
       setRows(await api.getDates());
-      setError("");
     } catch (err) {
-      setError(err.message);
+      notifyError("Could not load billing schedule", err.message);
     } finally {
       setLoading(false);
     }
@@ -75,19 +72,16 @@ export default function BillingSchedule() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addVisible, addForm, navigate]);
 
-  const openAdd = () => { setAddVisible(true); setError(""); setNotice(""); };
+  const openAdd = () => { setAddVisible(true); };
 
   const submitAdd = async () => {
     try {
       await api.addDate(addForm);
       setAddForm(EMPTY_ADD);
       setAddVisible(false);
-      setNotice("Record added successfully!");
-      setError("");
       notifySuccess("Record added successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Add failed", err.message);
     }
   };
@@ -102,18 +96,15 @@ export default function BillingSchedule() {
       issDate: row.issDate,
       dueDate: row.dueDate,
     });
-    setError(""); setNotice("");
   };
 
   const saveEdit = async (oldMonth) => {
     try {
       await api.updateDate({ oldMonth, ...editForm });
       setEditingMonth(null);
-      setNotice("Updated successfully!");
       notifySuccess("Updated successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Update failed", err.message);
     }
   };
@@ -122,9 +113,6 @@ export default function BillingSchedule() {
     <div className="dashboard dashboard--wide">
       <h1 className="dashboard__title">Billing Schedule</h1>
       <p className="dashboard__subtitle">Set reading, issue, and due dates for each billing month</p>
-
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
 
       <div className="charges-table charges-table--dates">
         <div className="charges-table__header">

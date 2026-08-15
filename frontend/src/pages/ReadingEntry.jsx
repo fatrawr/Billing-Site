@@ -10,7 +10,6 @@ export default function ReadingEntry() {
   const [targetMonth, setTargetMonth] = useState(null);
   const [rec, setRec] = useState(null);
   const [currRdg, setCurrRdg] = useState("");
-  const [error, setError] = useState("");
   const [searchMode, setSearchMode] = useState(false);
   const [searchVal, setSearchVal] = useState("");
 
@@ -29,7 +28,7 @@ export default function ReadingEntry() {
         const i = init.refNumbers.indexOf(init.startRef);
         setIdx(i);
         await load(init.startRef, init.targetMonth);
-      } catch (err) { setError(err.message); }
+      } catch (err) { notifyError("Could not load reading entry", err.message); }
     })();
   }, [load]);
 
@@ -43,18 +42,16 @@ export default function ReadingEntry() {
   const save = async () => {
     const c = parseInt(currRdg, 10);
     if (isNaN(c)) {
-      setError("Enter a valid current reading before moving to the next record.");
+      notifyError("Enter a valid current reading before moving to the next record.");
       return false;
     }
-    if (currRdg.trim().length > 7) { setError("Current reading cannot exceed 7 digits."); return false; }
-    if (c < rec.prevRdg) { setError("Current reading cannot be less than previous reading."); return false; }
-    setError("");
+    if (currRdg.trim().length > 7) { notifyError("Current reading cannot exceed 7 digits."); return false; }
+    if (c < rec.prevRdg) { notifyError("Current reading cannot be less than previous reading."); return false; }
     try {
       await api.saveReadingEntry(refs[idx], { currRdg: c, prevRdg: rec.prevRdg, month: targetMonth });
       notifySuccess("Reading saved");
       return true;
     } catch (e) {
-      setError(e.message);
       notifyError("Save failed", e.message);
       return false;
     }
@@ -63,17 +60,17 @@ export default function ReadingEntry() {
   const goTo = async (i) => { setIdx(i); await load(refs[i], targetMonth); };
   const goNext = async () => {
     if (!(await save())) return;
-    if (idx + 1 < refs.length) goTo(idx + 1); else setError("This is the last record.");
+    if (idx + 1 < refs.length) goTo(idx + 1); else notifyError("This is the last record.");
   };
-  const goPrev = () => (idx - 1 >= 0 ? goTo(idx - 1) : setError("This is the first record."));
+  const goPrev = () => (idx - 1 >= 0 ? goTo(idx - 1) : notifyError("This is the first record."));
   const goFirst = () => goTo(0);
   const goLast = () => goTo(refs.length - 1);
 
   const runSearch = () => {
     const ref = parseInt(searchVal, 10);
     const i = refs.indexOf(ref);
-    if (i === -1) setError("Reference number not found.");
-    else { setError(""); goTo(i); }
+    if (i === -1) notifyError("Reference number not found.");
+    else goTo(i);
     setSearchMode(false);
   };
 
@@ -100,7 +97,6 @@ export default function ReadingEntry() {
   if (idx === -1) return (
     <div className="dashboard dashboard--narrow">
       <h1 className="dashboard__title">Meter Reading Entry</h1>
-      {error && <div className="flash error">{error}</div>}
     </div>
   );
 
@@ -108,8 +104,6 @@ export default function ReadingEntry() {
     <div className="dashboard dashboard--narrow">
       <h1 className="dashboard__title">Meter Reading Entry</h1>
       <p className="dashboard__subtitle">Billing month {targetMonth} — record {idx + 1} of {refs.length}</p>
-
-      {error && <div className="flash error">{error}</div>}
 
       <div className="payment-entry-card">
         <div className="field">

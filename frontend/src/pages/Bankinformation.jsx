@@ -12,8 +12,6 @@ export default function BankInformation() {
 
   const [banks, setBanks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
 
   const [addVisible, setAddVisible] = useState(false);
   const [addName, setAddName] = useState("");
@@ -28,9 +26,8 @@ export default function BankInformation() {
     setLoading(true);
     try {
       setBanks(await api.getBanks());
-      setError("");
     } catch (err) {
-      setError(err.message);
+      notifyError("Could not load banks", err.message);
     } finally {
       setLoading(false);
     }
@@ -57,17 +54,15 @@ export default function BankInformation() {
 
   const digitsOnly = (v) => v.replace(/[^0-9]/g, "").slice(0, 16);
 
-  const openAdd = () => { setAddVisible(true); setError(""); setNotice(""); };
+  const openAdd = () => { setAddVisible(true); };
 
   const submitAdd = async () => {
     try {
       await api.addBank({ bankName: addName.trim(), accountNo: addAcct.trim() });
       setAddName(""); setAddAcct(""); setAddVisible(false);
-      setNotice("Record added successfully!"); setError("");
       notifySuccess("Record added successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Add failed", err.message);
     }
   };
@@ -76,18 +71,15 @@ export default function BankInformation() {
     setEditingId(row.id);
     setEditName(row.bankName);
     setEditAcct(row.accountNo);
-    setError(""); setNotice("");
   };
 
   const saveEdit = async (id) => {
     try {
       await api.updateBank({ id, bankName: editName.trim(), accountNo: editAcct.trim() });
       setEditingId(null);
-      setNotice("Updated successfully!");
       notifySuccess("Updated successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Update failed", err.message);
     }
   };
@@ -96,11 +88,9 @@ export default function BankInformation() {
     if (!(await confirmDialog("Delete this record?"))) return;
     try {
       await api.deleteBank({ id });
-      setNotice("Deleted successfully!");
       notifySuccess("Deleted successfully");
       load();
     } catch (err) {
-      setError(err.message);
       notifyError("Delete failed", err.message);
     }
   };
@@ -109,9 +99,6 @@ export default function BankInformation() {
     <div className="dashboard dashboard--wide">
       <h1 className="dashboard__title">Bank Information</h1>
       <p className="dashboard__subtitle">Bank accounts consumers can pay bills into</p>
-
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
 
       <div className="charges-table charges-table--staff">
         <div className="charges-table__header">

@@ -13,16 +13,13 @@ export default function ForgotPassword() {
   const [resetToken, setResetToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const sendCode = async (e) => {
     e.preventDefault();
-    setError(""); setNotice("");
-    if (!email.trim()) return setError("Please enter your email.");
+    if (!email.trim()) return notifyError("Please enter your email.");
 
     setLoading(true);
     try {
@@ -30,7 +27,6 @@ export default function ForgotPassword() {
       setStage("code");
       notifySuccess("Code sent", "Check your email for the verification code.");
     } catch (err) {
-      setError(err.message);
       notifyError("Could not send code", err.message);
     } finally {
       setLoading(false);
@@ -50,20 +46,18 @@ export default function ForgotPassword() {
 
   const resetPasswordSubmit = async (e) => {
     e.preventDefault();
-    setError(""); setNotice("");
 
     if (newPassword.length < 6 || newPassword.length > 15)
-      return setError("Password must be 6–15 characters.");
+      return notifyError("Password must be 6–15 characters.");
     if (newPassword !== confirmPassword)
-      return setError("Passwords do not match.");
+      return notifyError("Passwords do not match.");
 
     setLoading(true);
     try {
       await api.resetPassword({ email: email.trim(), resetToken, newPassword, confirmPassword });
       notifySuccess("Password reset", "Please log in with your new password.");
-      navigate("/login", { state: { notice: "Password reset successfully! Please log in." } });
+      navigate("/login");
     } catch (err) {
-      setError(err.message);
       notifyError("Reset failed", err.message);
     } finally {
       setLoading(false);
@@ -83,9 +77,6 @@ export default function ForgotPassword() {
       }
       footer={<a className="back-link" href="/login" onClick={(e) => { e.preventDefault(); navigate("/login"); }}>Back to Log In</a>}
     >
-      {error && <div className="flash error">{error}</div>}
-      {notice && <div className="flash success">{notice}</div>}
-
       {stage === "email" && (
         <form onSubmit={sendCode} className="auth-card__form">
           <div className="icon-field">

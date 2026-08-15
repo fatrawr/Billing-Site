@@ -11,16 +11,14 @@ export default function Login() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { refresh } = useAuth();
 
   const submit = async (e) => {
     e.preventDefault();
-    setError("");
 
     if (!userId.trim() || !password) {
-      setError("Please fill in all fields.");
+      notifyError("Please fill in all fields.");
       return;
     }
 
@@ -31,7 +29,6 @@ export default function Login() {
       notifySuccess("Welcome back!");
       navigate("/menu");
     } catch (err) {
-      setError(err.message);
       notifyError("Login failed", err.message);
     } finally {
       setLoading(false);
@@ -55,8 +52,6 @@ export default function Login() {
         </>
       }
     >
-      {error && <div className="flash error">{error}</div>}
-
       <form onSubmit={submit} className="auth-card__form">
         <div className="icon-field">
           <User className="icon-field__icon" size={16} />
