@@ -57,9 +57,15 @@ def consumers_report():
         if not consumers:
             return jsonify({"error": "No consumers found for the given Reference Number(s)."}), 404
 
+        ref_nos = [c.ReferenceNo for c in consumers]
+        meters_by_ref = {
+            m.ReferenceNo: m
+            for m in db.query(MeterDetailTbl).filter(MeterDetailTbl.ReferenceNo.in_(ref_nos)).all()
+        }
+
         rows = []
         for c in consumers:
-            meter = db.query(MeterDetailTbl).filter_by(ReferenceNo=c.ReferenceNo).first()
+            meter = meters_by_ref.get(c.ReferenceNo)
             rows.append({
                 "referenceNo": c.ReferenceNo,
                 "name": c.Name,
