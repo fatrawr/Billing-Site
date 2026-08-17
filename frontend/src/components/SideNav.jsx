@@ -27,8 +27,12 @@ const NAV_TREE = [
   {
     type: "category", name: "Bills Processing", icon: Receipt,
     children: [
+      {name: "Populate Payment Table", to: "/menu/bills/populate-payment", adminOnly: true },
+      {name: "Populate Reading Table", to: "/menu/bills/populate-reading", adminOnly: true },
       { name: "Payment Entry", to: "/menu/bills/payment-entry", adminOnly: true },
       { name: "Reading Entry", to: "/menu/bills/reading-entry", adminOnly: true },
+      {name: "Payment Posting", to: "/menu/bills/payment-posting", adminOnly: true },
+      {name: "Reading Posting", to: "/menu/bills/reading-posting", adminOnly: true },
       { name: "Bill Generation", to: "/menu/bills/generate" },
     ],
   },
