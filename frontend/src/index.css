@@ -838,16 +838,8 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
     background: linear-gradient(180deg, rgba(250,247,241,0.35), rgba(250,247,241,0.75) 70%, var(--color-paper) 100%);
   }
 
-  .landing__nav-wrap {
-    position: relative; z-index: 3;
-    padding: var(--space-5) var(--space-6) 0;
-    background-image: url("/sparkle-bg.jpg");
-    background-size: cover;
-    background-position: top center;
-  }
-
   .hero__nav {
-    position: sticky; top: var(--space-5); z-index: 50; 
+    position: relative; top: var(--space-5); z-index: 50; 
     max-width: 900px; width: 100%; margin: 0 auto;
     display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
     background: rgba(255, 254, 251, 0.7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);

@@ -6,10 +6,11 @@ export default function BillPreview() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const bills = state?.bills || [];
+  const backTo = state?.from === "welcome" ? "/" : "/menu/bills";
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") navigate("/menu/bills/generate");
+      if (e.key === "Escape") navigate(backTo);
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p") {
         e.preventDefault();
         window.print();
@@ -17,9 +18,7 @@ export default function BillPreview() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [navigate]);
-
-  
+  }, [navigate, backTo]);
 
   if (bills.length === 0) {
     return (
@@ -27,7 +26,7 @@ export default function BillPreview() {
         <h1 className="dashboard__title">Bill Preview</h1>
         <p className="dashboard__subtitle">No bills to show — generate one first.</p>
         <div className="dashboard__footer">
-          <button className="btn btn-primary btn-exit" onClick={() => navigate("/menu/bills/generate")}>
+          <button className="btn btn-primary btn-exit" onClick={() => navigate(backTo)}>
             Go to Bill Generation
           </button>
         </div>
@@ -45,7 +44,7 @@ export default function BillPreview() {
           <button className="btn btn-primary" onClick={() => window.print()}>
             Print&nbsp;&nbsp;<span className="btn-exit__key">Ctrl+P</span>
           </button>
-          <button className="btn btn-secondary" onClick={() => navigate("/menu/bills")}>
+          <button className="btn btn-secondary" onClick={() => navigate(backTo)}>
             Close&nbsp;&nbsp;<span className="btn-exit__key">Esc</span>
           </button>
         </div>

@@ -63,7 +63,7 @@ export default function Welcome() {
     setLoading(true);
     try {
       const { bills } = await api.previewBills({ from: refNo });
-      navigate("/menu/bills/preview", { state: { bills } });
+      navigate("/menu/bills/preview", { state: { bills, from: "welcome"  } });
     } catch (err) {
       notifyError("Could not generate bill", err.message);
     } finally {
