@@ -28,31 +28,33 @@ def consumers_report():
     from_ref = request.args.get("from", "").strip()
     to_ref = request.args.get("to", "").strip()
 
-    if not from_ref.isdigit():
-        return jsonify({"error": "Reference Number must be numeric."}), 400
-    from_ref_int = int(from_ref)
-
     db = SessionLocal()
     try:
-        if to_ref:
-            if not to_ref.isdigit():
-                return jsonify({"error": "Range Reference Number must be numeric."}), 400
-            to_ref_int = int(to_ref)
-            if to_ref_int < from_ref_int:
-                return jsonify({"error": "Range end must be greater than or equal to the starting Reference Number."}), 400
-
-            consumers = (
-                db.query(ConsumerTbl)
-                .filter(ConsumerTbl.ReferenceNo >= from_ref_int, ConsumerTbl.ReferenceNo <= to_ref_int)
-                .order_by(ConsumerTbl.ReferenceNo)
-                .all()
-            )
+        if not from_ref:
+              consumers = db.query(ConsumerTbl).order_by(ConsumerTbl.ReferenceNo).all()
         else:
-            consumers = (
-                db.query(ConsumerTbl)
-                .filter(ConsumerTbl.ReferenceNo == from_ref_int)
-                .all()
-            )
+            if not from_ref.isdigit():
+                return jsonify({"error": "Reference Number must be numeric."}), 400
+            from_ref_int = int(from_ref)   
+            if to_ref:
+                if not to_ref.isdigit():
+                    return jsonify({"error": "Range Reference Number must be numeric."}), 400
+                to_ref_int = int(to_ref)
+                if to_ref_int < from_ref_int:
+                    return jsonify({"error": "Range end must be greater than or equal to the starting Reference Number."}), 400
+
+                consumers = (
+                    db.query(ConsumerTbl)
+                    .filter(ConsumerTbl.ReferenceNo >= from_ref_int, ConsumerTbl.ReferenceNo <= to_ref_int)
+                    .order_by(ConsumerTbl.ReferenceNo)
+                    .all()
+                )
+            else:
+                consumers = (
+                    db.query(ConsumerTbl)
+                    .filter(ConsumerTbl.ReferenceNo == from_ref_int)
+                    .all()
+                )
 
         if not consumers:
             return jsonify({"error": "No consumers found for the given Reference Number(s)."}), 404

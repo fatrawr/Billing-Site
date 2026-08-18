@@ -1,16 +1,29 @@
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-function formatDate(iso) {
-  if (!iso) return "—";
-  const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`;
-}
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { api } from "../api.js";
+import Clock from "../components/Clock.jsx";
 
 export default function ConsumersReportPreview() {
-  const { state } = useLocation();
   const navigate = useNavigate();
-  const consumers = state?.consumers || [];
+  const [consumers, setConsumers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const data = await api.getConsumersReport({});
+        setConsumers(data.consumers);
+        setError("");
+      } catch (err) {
+        setError(err.message);
+        setConsumers([]);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -24,6 +37,29 @@ export default function ConsumersReportPreview() {
     return () => window.removeEventListener("keydown", onKey);
   }, [navigate]);
 
+  if (loading) {
+    return (
+      <div className="dashboard dashboard--narrow">
+        <h1 className="dashboard__title">List of Consumers</h1>
+        <p className="dashboard__subtitle">Loading report…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard dashboard--narrow">
+        <h1 className="dashboard__title">List of Consumers</h1>
+        <div className="flash error">{error}</div>
+        <div className="dashboard__footer">
+          <button className="btn btn-primary btn-exit" onClick={() => navigate("/menu/reports/consumers")}>
+            Back to Report
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (consumers.length === 0) {
     return (
       <div className="dashboard dashboard--narrow">
@@ -36,6 +72,13 @@ export default function ConsumersReportPreview() {
         </div>
       </div>
     );
+  }
+
+  let activeMeters = 0, inactiveMeters = 0, deletedConsumers = 0;
+  for (const c of consumers) {
+    if (c.state === "Deleted") deletedConsumers += 1;
+    if (c.meter?.status === "Active") activeMeters += 1;
+    if (c.meter?.status === "Inactive") inactiveMeters += 1;
   }
 
   return (
@@ -55,6 +98,12 @@ export default function ConsumersReportPreview() {
       </div>
 
       <div className="report-page">
+        <header className="report-page__header">
+          <span className="report-page__header-date">{dateStr}</span>
+          <span className="report-page__header-brand">CETS</span>
+          <Clock className="report-page__header-time" />
+        </header>
+
         <h1 className="report-page__title">List of Consumers <span>with meter details</span></h1>
 
         <table className="report-table">
@@ -98,6 +147,24 @@ export default function ConsumersReportPreview() {
             </tbody>
           ))}
         </table>
+
+        <div className="report-summary">
+          <h2 className="report-summary__title">Summary</h2>
+          <div className="report-summary__grid">
+            <div className="report-summary__item">
+              <span className="report-summary__label">Total Active Meters</span>
+              <span className="report-summary__value">{activeMeters}</span>
+            </div>
+            <div className="report-summary__item">
+              <span className="report-summary__label">Total Inactive Meters</span>
+              <span className="report-summary__value">{inactiveMeters}</span>
+            </div>
+            <div className="report-summary__item">
+              <span className="report-summary__label">Total Deleted Consumers</span>
+              <span className="report-summary__value">{deletedConsumers}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

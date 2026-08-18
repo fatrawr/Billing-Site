@@ -22,7 +22,6 @@ import ConsumerDisplay from "./pages/ConsumerDisplay.jsx";
 import PaymentEntry from "./pages/Paymententry.jsx";
 import ReadingEntry from "./pages/ReadingEntry.jsx";
 import ReportsMenu from "./pages/ReportsMenu.jsx";
-import ListOfConsumers from "./pages/ListOfConsumers.jsx";
 import ConsumersReportPreview from "./pages/ConsumersReportPreview.jsx";
 
 const PAGE_TITLES = {
@@ -46,7 +45,6 @@ const PAGE_TITLES = {
   "/menu/bank": "Bank Information",
   "/menu/config": "Config Information",
   "/menu/reports": "Reports",
-  "/menu/reports/consumers": "List of Consumers",
   "/menu/reports/consumers/preview": "List of Consumers",
 };
 
@@ -90,8 +88,7 @@ export default function App() {
             <Route path="menu/bank" element={<BankInformation />} />
             <Route path="menu/config" element={<ConfigInformation />} />
             <Route path="menu/reports" element={<ReportsMenu />} />
-            <Route path="menu/reports/consumers" element={<ListOfConsumers />} />
-            <Route path="menu/reports/consumers/preview" element={<ConsumersReportPreview />} />
+            <Route path="menu/reports/consumers" element={<ConsumersReportPreview />} />
           
           
         </Routes>
