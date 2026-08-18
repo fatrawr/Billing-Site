@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
-import Clock from "../components/Clock.jsx";
+import { Clock } from "../components/Clock.jsx";
 
 export default function ConsumersReportPreview() {
   const navigate = useNavigate();
