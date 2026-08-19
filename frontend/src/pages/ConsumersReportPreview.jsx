@@ -3,11 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 import { Clock } from "../components/Clock.jsx";
 
+function formatDate(iso) {
+  if (!iso) return "—";
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function todayAsDMY() {
+  const now = new Date();
+  const d = String(now.getDate()).padStart(2, "0");
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  return `${d}/${m}/${now.getFullYear()}`;
+}
+
 export default function ConsumersReportPreview() {
   const navigate = useNavigate();
   const [consumers, setConsumers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const dateStr = todayAsDMY();
 
   useEffect(() => {
     (async () => {
