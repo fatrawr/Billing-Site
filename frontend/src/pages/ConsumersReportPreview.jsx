@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 import { Clock } from "../components/Clock.jsx";
 
+const SOCIETY_NAME = "The Co-operative Engineers Town Society Ltd., Lahore";
+
 function formatDate(iso) {
   if (!iso) return "—";
   const [y, m, d] = iso.split("-");
@@ -114,7 +116,7 @@ export default function ConsumersReportPreview() {
       <div className="report-page">
         <header className="report-page__header">
           <span className="report-page__header-date">{dateStr}</span>
-          <span className="report-page__header-brand">CETS</span>
+          <span className="report-page__header-brand">{SOCIETY_NAME}</span>
           <Clock className="report-page__header-time" />
         </header>
 
