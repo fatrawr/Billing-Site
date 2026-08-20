@@ -133,7 +133,10 @@ export default function ConsumersReportPreview() {
                 </div>
                 <div className="report-masthead__subtitle">
                   <p className="report-footnote">* MF = Multiplying Factor &nbsp;&nbsp;·&nbsp;&nbsp; TOP = Type of Property</p>
-                  List of Consumers <span>with meter details</span>
+                  <span className="report-masthead__subtitle-text">
+                    List of Consumers <span>with meter details</span>
+                  </span>
+                  <span className="report-masthead__subtitle-page">Page {pageNum} of {totalPages}</span>
                 </div>
               </th>
             </tr>
