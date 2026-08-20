@@ -132,6 +132,7 @@ export default function ConsumersReportPreview() {
                   <span className="report-masthead__time">{timeStr}</span>
                 </div>
                 <div className="report-masthead__subtitle">
+                  <p className="report-footnote">* MF = Multiplying Factor &nbsp;&nbsp;·&nbsp;&nbsp; TOP = Type of Property</p>
                   List of Consumers <span>with meter details</span>
                 </div>
               </th>
@@ -176,7 +177,7 @@ export default function ConsumersReportPreview() {
           ))}
         </table>
 
-        <p className="report-footnote">* MF = Multiplying Factor &nbsp;&nbsp;·&nbsp;&nbsp; TOP = Type of Property</p>
+        
 
         <div className="report-summary">
           <h2 className="report-summary__title">Summary</h2>
