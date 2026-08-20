@@ -4,6 +4,8 @@ import { api } from "../api.js";
 import { Clock } from "../components/Clock.jsx";
 import { notifyError } from "../lib/toast.js";
 
+const SOCIETY_NAME = "The Co-operative Engineers Town Society Ltd., Lahore";
+
 function formatDate(iso) {
   if (!iso) return "—";
   const [y, m, d] = iso.split("-");
@@ -31,6 +33,8 @@ export default function ConsumersReportPreview() {
       }
     })();
   }, []);
+
+  
 
   // This report prints landscape while every other printed page in the
   // app (bills) is portrait. Rather than assigning a named CSS @page
@@ -124,7 +128,7 @@ export default function ConsumersReportPreview() {
               <th colSpan={7} style={{ padding: 0, border: "none", background: "transparent" }}>
                 <div className="report-masthead">
                   <span className="report-masthead__date">{dateStr}</span>
-                  <span className="report-masthead__brand">CETS</span>
+                  <span className="report-masthead__brand">{SOCIETY_NAME}</span>
                   <span className="report-masthead__time">{timeStr}</span>
                 </div>
                 <div className="report-masthead__subtitle">
