@@ -702,55 +702,64 @@
 /* ═══════════════════════════════════════════════════════════
    CONSUMER REPORT PREVIEW (Reports > List of Consumers)
    ═══════════════════════════════════════════════════════════ */
-.report-preview { width: 100%; min-height: 100vh; background: #6b7280; padding: 24px 0 60px; }
+.report-preview { width: 100%; min-height: 100vh; background: var(--color-paper); padding: 24px 0 60px; }
 .report-preview__toolbar {
   position: sticky; top: 0; z-index: 10;
   display: flex; align-items: center; justify-content: space-between;
-  max-width: 1000px; margin: 0 auto 20px; padding: 14px 20px;
+  max-width: 1122px; margin: 0 auto 20px; padding: 14px 20px;
   background: var(--color-forest-deep); border-radius: 12px; color: #fdfbf7;
   gap: 12px; flex-wrap: wrap;
 }
 .report-preview__count { font-weight: 600; font-size: 14px; }
-.report-page__header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding-bottom: 12px; margin-bottom: 16px; border-bottom: 2px solid var(--color-forest);
-}
-.report-page__header-date, .report-page__header-time { font-size: 13px; font-weight: 600; color: var(--color-ink-soft); min-width: 90px; }
-.report-page__header-time { text-align: right; }
-.report-page__header-brand { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--color-forest-deep); letter-spacing: 0.02em; }
 .report-preview__actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .report-preview__actions .btn { padding: 9px 16px; min-height: 40px; flex: none; }
 
+/* A4 landscape proportions (297mm x 210mm) at screen scale */
 .report-page {
-  max-width: 1000px; margin: 0 auto; background: #fff; border-radius: 8px;
-  padding: 28px 32px; box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  max-width: 1122px; margin: 0 auto; background: #fff;
+  padding: 0 24px 24px;
 }
-.report-page__title { font-family: var(--font-display); font-size: 20px; margin: 0 0 18px; color: var(--color-ink); }
-.report-page__title span { font-size: 13px; font-weight: 500; color: var(--color-ink-soft); margin-left: 10px; }
 
-.report-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-.report-table th, .report-table td {
-  border: 1px solid #333; padding: 6px 8px; text-align: center; vertical-align: middle;
+.report-masthead {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 4px; border-bottom: 1.5px solid var(--color-forest);
 }
+.report-masthead__date, .report-masthead__time { font-size: 12px; font-weight: 600; color: var(--color-ink-soft); min-width: 80px; }
+.report-masthead__time { text-align: right; }
+.report-masthead__brand { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--color-forest-deep); letter-spacing: 0.02em; }
+.report-masthead__subtitle {
+  text-align: center; padding: 4px 0 6px; font-family: var(--font-display); font-size: 14px; color: var(--color-ink);
+  border-bottom: 1.5px solid var(--color-forest);
+}
+.report-masthead__subtitle span { font-size: 11px; font-weight: 500; color: var(--color-ink-soft); margin-left: 8px; }
+
+.report-table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
 .report-table thead th {
-  border: 1px solid #333; padding: 7px 8px; text-align: center; vertical-align: middle;
-  background: #eef1ed; font-weight: 700; color: var(--color-ink);
+  border: none; border-bottom: 1.5px solid var(--color-forest);
+  padding: 3px 6px; text-align: center; vertical-align: middle;
+  background: #eef1ed; font-weight: 700; color: var(--color-ink); font-size: 11px;
 }
-.report-table tbody td { padding: 8px 10px; text-align: center; vertical-align: middle; border: none; }
-
-.report-table__meter-row td { color: var(--color-ink-soft); font-size: 12px; }
+.report-table tbody td {
+  padding: 3px 6px; text-align: center; vertical-align: middle; border: none;
+  font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.report-table__record:nth-of-type(even) td { background: #f5f7f4; }
+.report-table__meter-row td { color: var(--color-ink-soft); font-size: 10.5px; padding-top: 1px; padding-bottom: 5px; }
+.report-table__record tr:first-child td { padding-top: 5px; }
 .report-table__sr, .report-table__ref { font-weight: 600; }
 
-.report-summary { margin-top: 28px; padding-top: 16px; border-top: 2px solid var(--color-forest); }
-.report-summary__title { font-family: var(--font-display); font-size: 15px; margin: 0 0 12px; color: var(--color-ink); }
+.report-footnote { margin-top: 10px; font-size: 10px; color: var(--color-ink-soft); }
+
+.report-summary { margin-top: 20px; padding-top: 12px; border-top: 1.5px solid var(--color-forest); }
+.report-summary__title { font-family: var(--font-display); font-size: 14px; margin: 0 0 10px; color: var(--color-ink); }
 .report-summary__grid { display: flex; gap: 32px; flex-wrap: wrap; }
 .report-summary__item { display: flex; flex-direction: column; gap: 2px; }
-.report-summary__label { font-size: 11.5px; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
-.report-summary__value { font-size: 20px; font-weight: 700; color: var(--color-forest-deep); font-family: var(--font-display); }
+.report-summary__label { font-size: 11px; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.report-summary__value { font-size: 18px; font-weight: 700; color: var(--color-forest-deep); font-family: var(--font-display); }
 
-@media (max-width: 720px) {
-  .report-page { padding: 18px; overflow-x: auto; }
-  .report-table { font-size: 11px; }
+@media (max-width: 1160px) {
+  .report-page { padding: 0 16px 16px; overflow-x: auto; }
+  .report-table { font-size: 10px; min-width: 900px; table-layout: auto; }
 }
 
 
@@ -1079,10 +1088,9 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   .bill-info-row, .bill-info-cell, .bill-meter-row, .bill-block { border-color: #333 !important; border-width: 0.75pt !important; }
 
   .report-preview { background: #fff; padding: 0; }
-  @page consumers-report { size: A4 landscape; margin: 10mm 12mm; }
-  .report-page { page: consumers-report; box-shadow: none !important; border-radius: 0; padding: 0; max-width: none; }
-  .report-table thead { display: table-header-group; } /* repeat header on every printed page */
-  .report-table__record:nth-of-type(even) td { background: #f5f7f4; }
-  .report-table__meter-row td { color: var(--color-ink-soft); font-size: 12px; padding-top: 2px; padding-bottom: 10px; }
-  .report-table__record tr:first-child td { padding-top: 10px; }
+  .report-page { padding: 0; max-width: none; }
+  .report-masthead, .report-masthead__subtitle { break-after: avoid; }
+  .report-table thead { display: table-header-group; }
+  .report-table__record { break-inside: avoid; page-break-inside: avoid; }
+  .report-summary { break-inside: avoid; page-break-inside: avoid; }
 }

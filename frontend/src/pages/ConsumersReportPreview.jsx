@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 import { Clock } from "../components/Clock.jsx";
-
-const SOCIETY_NAME = "The Co-operative Engineers Town Society Ltd., Lahore";
+import { notifyError } from "../lib/toast.js";
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -11,39 +10,43 @@ function formatDate(iso) {
   return `${d}/${m}/${y}`;
 }
 
-function todayAsDMY() {
-  const now = new Date();
-  const d = String(now.getDate()).padStart(2, "0");
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  return `${d}/${m}/${now.getFullYear()}`;
-}
-
 export default function ConsumersReportPreview() {
   const navigate = useNavigate();
-  const [consumers, setConsumers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const dateStr = todayAsDMY();
+  const [consumers, setConsumers] = useState(null); // null = loading
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
       try {
         const data = await api.getConsumersReport({});
         setConsumers(data.consumers);
-        setError("");
       } catch (err) {
-        setError(err.message);
+        notifyError("Could not load report", err.message);
         setConsumers([]);
-      } finally {
-        setLoading(false);
       }
     })();
   }, []);
 
+  // This report prints landscape while every other printed page in the
+  // app (bills) is portrait. Rather than assigning a named CSS @page
+  // (which makes Chrome insert a blank leading page when it switches
+  // page contexts mid-document), we swap the *default* @page definition
+  // only while this component is mounted, then restore it on unmount.
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = "@media print { @page { size: A4 landscape; margin: 10mm 12mm; } }";
+    document.head.appendChild(style);
+    return () => style.remove();
+  }, []);
+
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") navigate("/menu/reports/consumers");
+      if (e.key === "Escape") navigate("/menu/reports");
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p") {
         e.preventDefault();
         window.print();
@@ -53,7 +56,10 @@ export default function ConsumersReportPreview() {
     return () => window.removeEventListener("keydown", onKey);
   }, [navigate]);
 
-  if (loading) {
+  const dateStr = now.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
+  const timeStr = now.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+  if (consumers === null) {
     return (
       <div className="dashboard dashboard--narrow">
         <h1 className="dashboard__title">List of Consumers</h1>
@@ -62,35 +68,24 @@ export default function ConsumersReportPreview() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="dashboard dashboard--narrow">
-        <h1 className="dashboard__title">List of Consumers</h1>
-        <div className="flash error">{error}</div>
-        <div className="dashboard__footer">
-          <button className="btn btn-primary btn-exit" onClick={() => navigate("/menu/reports/consumers")}>
-            Back to Report
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   if (consumers.length === 0) {
     return (
       <div className="dashboard dashboard--narrow">
         <h1 className="dashboard__title">List of Consumers</h1>
-        <p className="dashboard__subtitle">No records to show — generate a report first.</p>
+        <p className="dashboard__subtitle">No consumers found.</p>
         <div className="dashboard__footer">
-          <button className="btn btn-primary btn-exit" onClick={() => navigate("/menu/reports/consumers")}>
-            Go to Report
+          <button className="btn btn-primary btn-exit" onClick={() => navigate("/menu/reports")}>
+            Back to Reports
           </button>
         </div>
       </div>
     );
   }
 
-  let activeMeters = 0, inactiveMeters = 0, deletedConsumers = 0;
+  // Summary counts for the footer.
+  let activeMeters = 0;
+  let inactiveMeters = 0;
+  let deletedConsumers = 0;
   for (const c of consumers) {
     if (c.state === "Deleted") deletedConsumers += 1;
     if (c.meter?.status === "Active") activeMeters += 1;
@@ -107,23 +102,36 @@ export default function ConsumersReportPreview() {
           <button className="btn btn-primary" onClick={() => window.print()}>
             Print&nbsp;&nbsp;<span className="btn-exit__key">Ctrl+P</span>
           </button>
-          <button className="btn btn-secondary" onClick={() => navigate("/menu/reports/consumers")}>
+          <button className="btn btn-secondary" onClick={() => navigate("/menu/reports")}>
             Close&nbsp;&nbsp;<span className="btn-exit__key">Esc</span>
           </button>
         </div>
       </div>
 
       <div className="report-page">
-        <header className="report-page__header">
-          <span className="report-page__header-date">{dateStr}</span>
-          <span className="report-page__header-brand">{SOCIETY_NAME}</span>
-          <Clock className="report-page__header-time" />
-        </header>
-
-        <h1 className="report-page__title">List of Consumers <span>with meter details</span></h1>
-
         <table className="report-table">
+          <colgroup>
+            <col style={{ width: "5%" }} />
+            <col style={{ width: "11%" }} />
+            <col style={{ width: "16%" }} />
+            <col style={{ width: "27%" }} />
+            <col style={{ width: "13%" }} />
+            <col style={{ width: "13%" }} />
+            <col style={{ width: "15%" }} />
+          </colgroup>
           <thead>
+            <tr>
+              <th colSpan={7} style={{ padding: 0, border: "none", background: "transparent" }}>
+                <div className="report-masthead">
+                  <span className="report-masthead__date">{dateStr}</span>
+                  <span className="report-masthead__brand">CETS</span>
+                  <span className="report-masthead__time">{timeStr}</span>
+                </div>
+                <div className="report-masthead__subtitle">
+                  List of Consumers <span>with meter details</span>
+                </div>
+              </th>
+            </tr>
             <tr>
               <th rowSpan={2}>Sr.</th>
               <th rowSpan={2}>Reference No.</th>
@@ -131,13 +139,13 @@ export default function ConsumersReportPreview() {
               <th>Address</th>
               <th>Connection Date</th>
               <th>State</th>
-              <th>Multiplying Factor</th>
+              <th>MF*</th>
             </tr>
             <tr>
               <th>Meter No.</th>
               <th>Status</th>
               <th>Phase</th>
-              <th>Type of Property</th>
+              <th>TOP*</th>
               <th>Plot Size</th>
             </tr>
           </thead>
@@ -163,6 +171,8 @@ export default function ConsumersReportPreview() {
             </tbody>
           ))}
         </table>
+
+        <p className="report-footnote">* MF = Multiplying Factor &nbsp;&nbsp;·&nbsp;&nbsp; TOP = Type of Property</p>
 
         <div className="report-summary">
           <h2 className="report-summary__title">Summary</h2>
