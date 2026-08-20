@@ -730,10 +730,22 @@
 .report-masthead__time { text-align: right; }
 .report-masthead__brand { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--color-forest-deep); letter-spacing: 0.02em; }
 .report-masthead__subtitle {
+  position: relative;
   text-align: center; padding: 4px 0 6px; font-family: var(--font-display); font-size: 14px; color: var(--color-ink);
   border-bottom: 1.5px solid var(--color-forest);
 }
 .report-masthead__subtitle span { font-size: 11px; font-weight: 500; color: var(--color-ink-soft); margin-left: 8px; }
+
+.report-footnote {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  font-size: 10px;
+  color: var(--color-ink-soft);
+  text-align: left;
+}
 
 .report-table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
 .report-table thead th {
@@ -749,8 +761,6 @@
 .report-table__meter-row td { color: var(--color-ink-soft); font-size: 10.5px; padding-top: 1px; padding-bottom: 5px; }
 .report-table__record tr:first-child td { padding-top: 5px; }
 .report-table__sr, .report-table__ref { font-weight: 600; }
-
-.report-footnote { margin-top: 10px; font-size: 10px; color: var(--color-ink-soft); }
 
 .report-summary { margin-top: 20px; padding-top: 12px; border-top: 1.5px solid var(--color-forest); }
 .report-summary__title { font-family: var(--font-display); font-size: 14px; margin: 0 0 10px; color: var(--color-ink); }
