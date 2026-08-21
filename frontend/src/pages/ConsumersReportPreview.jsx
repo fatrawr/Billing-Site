@@ -136,7 +136,7 @@ export default function ConsumersReportPreview() {
   let inactiveMeters = 0;
   let deletedConsumers = 0;
   for (const c of consumers) {
-    if (c.state === "D") deletedConsumers += 1;
+    if (c.state === "Disconnected") deletedConsumers += 1;
     for (const m of c.meters || []) {
       if (m.status === "Active") activeMeters += 1;
       if (m.status === "Inactive") inactiveMeters += 1;
