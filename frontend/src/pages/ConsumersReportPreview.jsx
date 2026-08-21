@@ -9,7 +9,7 @@ import { notifyError } from "../lib/toast.js";
 // real "Page X of Y" number impossible), we chunk the data ourselves into
 // one table per physical page and print a manual page number on each.
 // Tune this if real printouts show it's leaving too much/too little room.
-const ROWS_PER_PAGE = 10;
+const ROWS_PER_PAGE = 12;
 
 function formatDate(iso) {
   if (!iso) return "—";
