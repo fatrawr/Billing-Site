@@ -1,15 +1,61 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
-import { Clock } from "../components/Clock.jsx";
 import { notifyError } from "../lib/toast.js";
 
-const SOCIETY_NAME = "The Co-operative Engineers Town Society Ltd., Lahore";
+// How many consumer records we deliberately fit per printed page. Chrome
+// doesn't support CSS's automatic page-counter margin boxes, so instead of
+// letting the browser paginate a single flowing table (which would make a
+// real "Page X of Y" number impossible), we chunk the data ourselves into
+// one table per physical page and print a manual page number on each.
+// Tune this if real printouts show it's leaving too much/too little room.
+const ROWS_PER_PAGE = 10;
 
 function formatDate(iso) {
   if (!iso) return "—";
   const [y, m, d] = iso.split("-");
   return `${d}/${m}/${y}`;
+}
+
+function ReportTableHead({ dateStr, timeStr, pageNum, totalPages }) {
+  return (
+    <thead>
+      <tr>
+        <th colSpan={7} style={{ padding: 0, border: "none", background: "transparent" }}>
+          <div className="report-masthead">
+            <span className="report-masthead__date">{dateStr}</span>
+            <span className="report-masthead__brand">CETS</span>
+            <span className="report-masthead__time">{timeStr}</span>
+          </div>
+          <div className="report-masthead__subtitle">
+            <span className="report-masthead__subtitle-footnote">
+              * MF = Multiplying Factor &nbsp;·&nbsp; TOP = Type of Property
+            </span>
+            <span className="report-masthead__subtitle-text">
+              List of Consumers <span>with meter details</span>
+            </span>
+            <span className="report-masthead__subtitle-page">Page {pageNum} of {totalPages}</span>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th rowSpan={2}>Sr.</th>
+        <th rowSpan={2}>Reference No.</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Connection Date</th>
+        <th>State</th>
+        <th>MF*</th>
+      </tr>
+      <tr>
+        <th>Meter No.</th>
+        <th>Status</th>
+        <th>Phase</th>
+        <th>TOP*</th>
+        <th>Plot Size</th>
+      </tr>
+    </thead>
+  );
 }
 
 export default function ConsumersReportPreview() {
@@ -33,8 +79,6 @@ export default function ConsumersReportPreview() {
       }
     })();
   }, []);
-
-  
 
   // This report prints landscape while every other printed page in the
   // app (bills) is portrait. Rather than assigning a named CSS @page
@@ -96,6 +140,11 @@ export default function ConsumersReportPreview() {
     if (c.meter?.status === "Inactive") inactiveMeters += 1;
   }
 
+  const pages = [];
+  for (let i = 0; i < consumers.length; i += ROWS_PER_PAGE) {
+    pages.push(consumers.slice(i, i + ROWS_PER_PAGE));
+  }
+
   return (
     <div className="report-preview">
       <div className="report-preview__toolbar no-print">
@@ -113,75 +162,45 @@ export default function ConsumersReportPreview() {
       </div>
 
       <div className="report-page">
-        <table className="report-table">
-          <colgroup>
-            <col style={{ width: "5%" }} />
-            <col style={{ width: "11%" }} />
-            <col style={{ width: "16%" }} />
-            <col style={{ width: "27%" }} />
-            <col style={{ width: "13%" }} />
-            <col style={{ width: "13%" }} />
-            <col style={{ width: "15%" }} />
-          </colgroup>
-          <thead>
-            <tr>
-              <th colSpan={7} style={{ padding: 0, border: "none", background: "transparent" }}>
-                <div className="report-masthead">
-                  <span className="report-masthead__date">{dateStr}</span>
-                  <span className="report-masthead__brand">{SOCIETY_NAME}</span>
-                  <span className="report-masthead__time">{timeStr}</span>
-                </div>
-                <div className="report-masthead__subtitle">
-                  <p className="report-footnote">* MF = Multiplying Factor &nbsp;&nbsp;·&nbsp;&nbsp; TOP = Type of Property</p>
-                  <span className="report-masthead__subtitle-text">
-                    List of Consumers <span>with meter details</span>
-                  </span>
-                  <span className="report-masthead__subtitle-page">Page {pageNum} of {totalPages}</span>
-                </div>
-              </th>
-            </tr>
-            <tr>
-              <th rowSpan={2}>Sr.</th>
-              <th rowSpan={2}>Reference No.</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Connection Date</th>
-              <th>State</th>
-              <th>MF*</th>
-            </tr>
-            <tr>
-              <th>Meter No.</th>
-              <th>Status</th>
-              <th>Phase</th>
-              <th>TOP*</th>
-              <th>Plot Size</th>
-            </tr>
-          </thead>
+        {pages.map((pageConsumers, pageIdx) => (
+          <div className="report-print-page" key={pageIdx}>
+            <table className="report-table">
+              <colgroup>
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "11%" }} />
+                <col style={{ width: "16%" }} />
+                <col style={{ width: "27%" }} />
+                <col style={{ width: "13%" }} />
+                <col style={{ width: "13%" }} />
+                <col style={{ width: "15%" }} />
+              </colgroup>
+              <ReportTableHead dateStr={dateStr} timeStr={timeStr} pageNum={pageIdx + 1} totalPages={pages.length} />
 
-          {consumers.map((c, i) => (
-            <tbody className="report-table__record" key={c.referenceNo}>
-              <tr>
-                <td rowSpan={2} className="report-table__sr">{i + 1}</td>
-                <td rowSpan={2} className="report-table__ref">{c.referenceNo}</td>
-                <td>{c.name}</td>
-                <td>{c.address}</td>
-                <td>{formatDate(c.connectionDate)}</td>
-                <td>{c.state}</td>
-                <td>{c.multiplyingFactor ?? "—"}</td>
-              </tr>
-              <tr className="report-table__meter-row">
-                <td>{c.meter?.meterNumber ?? "—"}</td>
-                <td>{c.meter?.status ?? "—"}</td>
-                <td>{c.meter?.phase ?? "—"}</td>
-                <td>{c.meter?.typeOfProperty ?? "—"}</td>
-                <td>{c.meter?.plotSize ?? "—"}</td>
-              </tr>
-            </tbody>
-          ))}
-        </table>
+              {pageConsumers.map((c, i) => (
+                <tbody className="report-table__record" key={c.referenceNo}>
+                  <tr>
+                    <td rowSpan={2} className="report-table__sr">{pageIdx * ROWS_PER_PAGE + i + 1}</td>
+                    <td rowSpan={2} className="report-table__ref">{c.referenceNo}</td>
+                    <td>{c.name}</td>
+                    <td>{c.address}</td>
+                    <td>{formatDate(c.connectionDate)}</td>
+                    <td>{c.state}</td>
+                    <td>{c.multiplyingFactor ?? "—"}</td>
+                  </tr>
+                  <tr className="report-table__meter-row">
+                    <td>{c.meter?.meterNumber ?? "—"}</td>
+                    <td>{c.meter?.status ?? "—"}</td>
+                    <td>{c.meter?.phase ?? "—"}</td>
+                    <td>{c.meter?.typeOfProperty ?? "—"}</td>
+                    <td>{c.meter?.plotSize ?? "—"}</td>
+                  </tr>
+                </tbody>
+              ))}
+            </table>
+          </div>
+        ))}
 
         
-
         <div className="report-summary">
           <h2 className="report-summary__title">Summary</h2>
           <div className="report-summary__list">
