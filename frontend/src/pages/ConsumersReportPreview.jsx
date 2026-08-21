@@ -184,16 +184,16 @@ export default function ConsumersReportPreview() {
 
         <div className="report-summary">
           <h2 className="report-summary__title">Summary</h2>
-          <div className="report-summary__grid">
-            <div className="report-summary__item">
+          <div className="report-summary__list">
+            <div className="report-summary__row">
               <span className="report-summary__label">Total Active Meters</span>
               <span className="report-summary__value">{activeMeters}</span>
             </div>
-            <div className="report-summary__item">
+            <div className="report-summary__row">
               <span className="report-summary__label">Total Inactive Meters</span>
               <span className="report-summary__value">{inactiveMeters}</span>
             </div>
-            <div className="report-summary__item">
+            <div className="report-summary__row">
               <span className="report-summary__label">Total Deleted Consumers</span>
               <span className="report-summary__value">{deletedConsumers}</span>
             </div>

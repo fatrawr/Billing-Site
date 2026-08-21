@@ -735,6 +735,11 @@
   border-bottom: 1.5px solid var(--color-forest);
 }
 .report-masthead__subtitle span { font-size: 11px; font-weight: 500; color: var(--color-ink-soft); margin-left: 8px; }
+.report-masthead__subtitle-page {
+  position: absolute; right: 2px; top: 50%; transform: translateY(-50%);
+  font-size: 10px; font-weight: 500; color: var(--color-ink-soft);
+}
+
 
 .report-footnote {
   position: absolute;
@@ -762,12 +767,12 @@
 .report-table__record tr:first-child td { padding-top: 5px; }
 .report-table__sr, .report-table__ref { font-weight: 600; }
 
-.report-summary { margin-top: 20px; padding-top: 12px; border-top: 1.5px solid var(--color-forest); }
-.report-summary__title { font-family: var(--font-display); font-size: 14px; margin: 0 0 10px; color: var(--color-ink); }
-.report-summary__grid { display: flex; gap: 32px; flex-wrap: wrap; }
-.report-summary__item { display: flex; flex-direction: column; gap: 2px; }
-.report-summary__label { font-size: 11px; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
-.report-summary__value { font-size: 18px; font-weight: 700; color: var(--color-forest-deep); font-family: var(--font-display); }
+.report-summary { margin-top: 32px; padding-top: 24px; border-top: 1.5px solid var(--color-forest); text-align: center; }
+.report-summary__title { font-family: var(--font-display); font-size: 30px; font-weight: 800; margin: 0 0 24px; color: var(--color-forest-deep); letter-spacing: 0.01em; }
+.report-summary__list { display: inline-flex; flex-direction: column; gap: 14px; text-align: left; min-width: 300px; }
+.report-summary__row { display: flex; justify-content: space-between; align-items: baseline; gap: 28px; padding-bottom: 10px; border-bottom: 1px solid var(--color-line); }
+.report-summary__label { font-size: 13px; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.report-summary__value { font-size: 24px; font-weight: 700; color: var(--color-forest-deep); font-family: var(--font-display); }
 
 @media (max-width: 1160px) {
   .report-page { padding: 0 16px 16px; overflow-x: auto; }
@@ -1104,5 +1109,12 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   .report-masthead, .report-masthead__subtitle { break-after: avoid; }
   .report-table thead { display: table-header-group; }
   .report-table__record { break-inside: avoid; page-break-inside: avoid; }
-  .report-summary { break-inside: avoid; page-break-inside: avoid; }
+  .report-print-page { break-after: page; }
+  .report-print-page:last-of-type { break-after: auto; }
+  .report-table thead { display: table-header-group; }
+  .report-table__record { break-inside: avoid; page-break-inside: avoid; }
+  .report-summary {
+    break-before: page; break-inside: avoid; page-break-inside: avoid;
+    min-height: 190mm; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
 }
