@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 import { notifyError } from "../lib/toast.js";
 
-// How many consumer records we deliberately fit per printed page. Chrome
-// doesn't support CSS's automatic page-counter margin boxes, so instead of
-// letting the browser paginate a single flowing table (which would make a
-// real "Page X of Y" number impossible), we chunk the data ourselves into
-// one table per physical page and print a manual page number on each.
-// Tune this if real printouts show it's leaving too much/too little room.
-const ROWS_PER_PAGE = 12;
+// How many *physical table rows* we deliberately fit per printed page
+// (not consumer records — a consumer with 3 meters now takes 4 rows:
+// one info row + one row per meter). Records are packed whole onto a
+// page; if a record wouldn't fully fit, it moves entirely to the next
+// page rather than splitting across the page break. Tune this if real
+// printouts show it's leaving too much/too little room.
+const ROWS_PER_PAGE = 24;
 const SOCIETY_NAME = "The Co-operative Engineers Town Society Ltd., Lahore";
 
 function formatDate(iso) {
@@ -136,15 +136,35 @@ export default function ConsumersReportPreview() {
   let inactiveMeters = 0;
   let deletedConsumers = 0;
   for (const c of consumers) {
-    if (c.state === "Deleted") deletedConsumers += 1;
-    if (c.meter?.status === "Active") activeMeters += 1;
-    if (c.meter?.status === "Inactive") inactiveMeters += 1;
+    if (c.state === "D") deletedConsumers += 1;
+    for (const m of c.meters || []) {
+      if (m.status === "Active") activeMeters += 1;
+      if (m.status === "Inactive") inactiveMeters += 1;
+    }
   }
 
+  // Pack whole consumer records onto pages, keyed by how many physical
+  // <tr> rows each record needs (1 info row + one row per meter, or 1
+  // placeholder row if the consumer has no meters at all). A record is
+  // never split across the page boundary — if it doesn't fit in the
+  // remaining space, the whole thing moves to the next page.
+  let srCounter = 0;
   const pages = [];
-  for (let i = 0; i < consumers.length; i += ROWS_PER_PAGE) {
-    pages.push(consumers.slice(i, i + ROWS_PER_PAGE));
+  let current = [];
+  let currentRows = 0;
+  for (const c of consumers) {
+    const meterRows = Math.max((c.meters || []).length, 1);
+    const recordRows = 1 + meterRows;
+    if (currentRows + recordRows > ROWS_PER_PAGE && current.length > 0) {
+      pages.push(current);
+      current = [];
+      currentRows = 0;
+    }
+    srCounter += 1;
+    current.push({ consumer: c, sr: srCounter });
+    currentRows += recordRows;
   }
+  if (current.length > 0) pages.push(current);
 
   return (
     <div className="report-preview">
@@ -163,7 +183,7 @@ export default function ConsumersReportPreview() {
       </div>
 
       <div className="report-page">
-        {pages.map((pageConsumers, pageIdx) => (
+        {pages.map((pageEntries, pageIdx) => (
           <div className="report-print-page" key={pageIdx}>
             <table className="report-table">
               <colgroup>
@@ -177,31 +197,36 @@ export default function ConsumersReportPreview() {
               </colgroup>
               <ReportTableHead dateStr={dateStr} timeStr={timeStr} pageNum={pageIdx + 1} totalPages={pages.length} />
 
-              {pageConsumers.map((c, i) => (
-                <tbody className="report-table__record" key={c.referenceNo}>
-                  <tr>
-                    <td rowSpan={2} className="report-table__sr">{pageIdx * ROWS_PER_PAGE + i + 1}</td>
-                    <td rowSpan={2} className="report-table__ref">{c.referenceNo}</td>
-                    <td>{c.name}</td>
-                    <td>{c.address}</td>
-                    <td>{formatDate(c.connectionDate)}</td>
-                    <td>{c.state}</td>
-                    <td>{c.multiplyingFactor ?? "—"}</td>
-                  </tr>
-                  <tr className="report-table__meter-row">
-                    <td>{c.meter?.meterNumber ?? "—"}</td>
-                    <td>{c.meter?.status ?? "—"}</td>
-                    <td>{c.meter?.phase ?? "—"}</td>
-                    <td>{c.meter?.typeOfProperty ?? "—"}</td>
-                    <td>{c.meter?.plotSize ?? "—"}</td>
-                  </tr>
-                </tbody>
-              ))}
+              {pageEntries.map(({ consumer: c, sr }) => {
+                const meters = c.meters && c.meters.length > 0 ? c.meters : [null];
+                const totalRows = meters.length + 1;
+                return (
+                  <tbody className="report-table__record" key={c.referenceNo}>
+                    <tr>
+                      <td rowSpan={totalRows} className="report-table__sr">{sr}</td>
+                      <td rowSpan={totalRows} className="report-table__ref">{c.referenceNo}</td>
+                      <td>{c.name}</td>
+                      <td>{c.address}</td>
+                      <td>{formatDate(c.connectionDate)}</td>
+                      <td>{c.state}</td>
+                      <td>{c.multiplyingFactor ?? "—"}</td>
+                    </tr>
+                    {meters.map((m, mi) => (
+                      <tr className="report-table__meter-row" key={mi}>
+                        <td>{m?.meterNumber ?? "—"}</td>
+                        <td>{m?.status ?? "—"}</td>
+                        <td>{m?.phase ?? "—"}</td>
+                        <td>{m?.typeOfProperty ?? "—"}</td>
+                        <td>{m?.plotSize ?? "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                );
+              })}
             </table>
           </div>
         ))}
 
-        
         <div className="report-summary">
           <h2 className="report-summary__title">Summary</h2>
           <div className="report-summary__list">

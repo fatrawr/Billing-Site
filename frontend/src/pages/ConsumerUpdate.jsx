@@ -5,7 +5,7 @@ import { notifySuccess, notifyError } from "../lib/toast.js";
 import { useAuth } from "../components/AuthContext.jsx";
 
 const RESIDENTIAL_OPTIONS = ["Residential", "Commercial", "Semi Commercial"];
-const PHASE_OPTIONS = ["1", "3"];
+const PHASE_OPTIONS = ["1", "2", "3"];
 const SIZE_PLOT_OPTIONS = [
   { value: "1K", label: "1 Kanal" },
   { value: "2K", label: "2 Kanal" },

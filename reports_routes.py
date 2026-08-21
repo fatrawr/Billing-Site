@@ -6,6 +6,8 @@ details in one pass, for a printable listing.
 Register with: app.register_blueprint(reports_bp, url_prefix="/api/reports")
 """
 
+from collections import defaultdict
+
 from flask import Blueprint, jsonify, request
 
 from database import SessionLocal
@@ -60,14 +62,17 @@ def consumers_report():
             return jsonify({"error": "No consumers found for the given Reference Number(s)."}), 404
 
         ref_nos = [c.ReferenceNo for c in consumers]
-        meters_by_ref = {
-            m.ReferenceNo: m
-            for m in db.query(MeterDetailTbl).filter(MeterDetailTbl.ReferenceNo.in_(ref_nos)).all()
-        }
+
+        # Was a plain dict keyed by ReferenceNo, so a consumer with more
+        # than one meter silently kept only the last one queried. Grouped
+        # into a list per ReferenceNo instead, so every meter comes through.
+        meters_by_ref = defaultdict(list)
+        for m in db.query(MeterDetailTbl).filter(MeterDetailTbl.ReferenceNo.in_(ref_nos)).all():
+            meters_by_ref[m.ReferenceNo].append(m)
 
         rows = []
         for c in consumers:
-            meter = meters_by_ref.get(c.ReferenceNo)
+            meters = meters_by_ref.get(c.ReferenceNo, [])
             rows.append({
                 "referenceNo": c.ReferenceNo,
                 "name": c.Name,
@@ -75,13 +80,16 @@ def consumers_report():
                 "connectionDate": c.ConnectionDate.isoformat() if c.ConnectionDate else None,
                 "state": expand_state(c.State),
                 "multiplyingFactor": float(c.Bill_MF) if c.Bill_MF is not None else None,
-                "meter": {
-                    "meterNumber": meter.MeterNumber,
-                    "status": expand_meter_status(meter.Status),
-                    "phase": expand_phase(meter.Phase),
-                    "typeOfProperty": expand_residential(meter.Residential),
-                    "plotSize": expand_size_plot(meter.SizePlot),
-                } if meter else None,
+                "meters": [
+                    {
+                        "meterNumber": m.MeterNumber,
+                        "status": expand_meter_status(m.Status),
+                        "phase": expand_phase(m.Phase),
+                        "typeOfProperty": expand_residential(m.Residential),
+                        "plotSize": expand_size_plot(m.SizePlot),
+                    }
+                    for m in meters
+                ],
             })
 
         return jsonify({"consumers": rows}), 200
