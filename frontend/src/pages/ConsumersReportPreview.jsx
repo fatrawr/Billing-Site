@@ -10,6 +10,7 @@ import { notifyError } from "../lib/toast.js";
 // one table per physical page and print a manual page number on each.
 // Tune this if real printouts show it's leaving too much/too little room.
 const ROWS_PER_PAGE = 12;
+const SOCIETY_NAME = "The Co-operative Engineers Town Society Ltd., Lahore";
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -24,7 +25,7 @@ function ReportTableHead({ dateStr, timeStr, pageNum, totalPages }) {
         <th colSpan={7} style={{ padding: 0, border: "none", background: "transparent" }}>
           <div className="report-masthead">
             <span className="report-masthead__date">{dateStr}</span>
-            <span className="report-masthead__brand">CETS</span>
+            <span className="report-masthead__brand">{SOCIETY_NAME}</span>
             <span className="report-masthead__time">{timeStr}</span>
           </div>
           <div className="report-masthead__subtitle">
