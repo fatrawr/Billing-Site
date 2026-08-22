@@ -1104,12 +1104,7 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   .report-table__record { break-inside: avoid; page-break-inside: avoid; }
 
    .report-print-page {
-    width: 297mm;
-    min-height: 210mm;
-    padding: 10mm 12mm;
-    box-sizing: border-box;
     break-after: page;
-    page-break-after: always;
   }
 
 

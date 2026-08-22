@@ -88,7 +88,7 @@ export default function ConsumersReportPreview() {
   // only while this component is mounted, then restore it on unmount.
   useEffect(() => {
     const style = document.createElement("style");
-    style.textContent = "@media print { @page { size: A4 landscape; margin: 6mm 10mm; } }";
+    style.textContent = "@media print { @page { size: A4 landscape; margin: 10mm 12mm; } }";
     document.head.appendChild(style);
     return () => style.remove();
   }, []);
