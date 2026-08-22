@@ -184,7 +184,9 @@ export default function ConsumersReportPreview() {
 
       <div className="report-page">
         {pages.map((pageEntries, pageIdx) => (
-          <div className="report-print-page" key={pageIdx}>
+          <div
+              className={`report-print-page${pageIdx === pages.length - 1 ? " report-print-page--last" : ""}`}
+              key={pageIdx}>
             <table className="report-table">
               <colgroup>
                 <col style={{ width: "5%" }} />

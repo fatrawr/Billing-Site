@@ -1103,12 +1103,8 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   .report-table thead { display: table-header-group; }
   .report-table__record { break-inside: avoid; page-break-inside: avoid; }
 
-   .report-print-page {
-    break-after: page;
-  }
-
-
-  .report-print-page:last-of-type { break-after: auto; page-break-after: auto;}
+   .report-print-page { break-after: page; }
+.report-print-page--last { break-after: auto; }
   .report-table thead { display: table-header-group; }
   .report-table__record { break-inside: avoid; page-break-inside: avoid; }
   .report-summary {
