@@ -40,6 +40,7 @@ const NAV_TREE = [
     type: "category", name: "Reports", icon: FileBarChart,
     children: [
       { name: "List of Consumers", to: "/menu/reports/consumers" },
+      { name: "Monthly Rates", to: "/menu/reports/monthly-rates" },
     ],
   },
 ];
