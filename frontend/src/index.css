@@ -1104,7 +1104,7 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   .bill-ad-strip { height: 200px; margin-bottom: 6px; }
   .bill-info-row, .bill-info-cell, .bill-meter-row, .bill-block { border-color: #333 !important; border-width: 0.75pt !important; }
 
-  .report-preview { background: #fff; padding: 0; }
+  .report-preview { background: #fff; padding: 0; min-height: 0 !important; }
   .report-page { padding: 0; max-width: none; }
   .report-masthead, .report-masthead__subtitle { break-after: avoid; }
   .report-table thead { display: table-header-group; }
