@@ -10,6 +10,7 @@ const ACCENTS = {
 const ITEMS = [
   { number: 1, title: "List of Consumers", subtitle: "with meter details", accent: ACCENTS.forest, to: "/menu/reports/consumers" },
   { number: 2, title: "Monthly Rates Report", subtitle: "input and preview", accent: ACCENTS.navy, to: "/menu/reports/monthly-rates" },
+  { number: 3, title: "Yearly Payments Report", subtitle: "annual payment summaries", accent: ACCENTS.forest, to: "/menu/reports/yearly-payments" },
 ];
 
 export default function ReportsMenu() {

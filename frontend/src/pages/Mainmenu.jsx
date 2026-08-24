@@ -15,9 +15,9 @@ const ITEMS = [
   { number: 3, title: "Bank Information",     subtitle: "Manage bank details",       accent: ACCENTS.forest, to: "/menu/bank" },
   { number: 4, title: "Staff Phone Numbers",  subtitle: "Contact directory",         accent: ACCENTS.navy,   to: "/menu/staff" },
   { number: 5, title: "Billing Schedule",     subtitle: "Set billing dates",         accent: ACCENTS.forest, to: "/menu/dates" },
-  { number: 6, title: "Configuration Setting",   subtitle: "Enter configurations",      accent: ACCENTS.navy,   to: "/menu/config" },
+  { number: 6, title: "Configuration Setting",   subtitle: "Enter configurations",   accent: ACCENTS.navy,   to: "/menu/config" },
   { number: 7, title: "Bills Processing",     subtitle: "Bills Process",             accent: ACCENTS.forest, to: "/menu/bills" },
-  { number: 8, title: "Reports",              subtitle: "Consumer & billing reports", accent: ACCENTS.navy,   to: "/menu/reports" },
+  { number: 8, title: "Billing Reports",      subtitle: "Consumer & billing reports", accent: ACCENTS.navy,   to: "/menu/reports" },
 ];
 
 export default function MainMenu() {
