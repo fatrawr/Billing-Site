@@ -752,6 +752,12 @@
 .report-masthead__subtitle-line2 { font-size: 12px; color: var(--color-ink-soft); }
 .report-page--portrait { max-width: 720px; }
 
+/* Monthly Rates only — bigger type + left-aligned description, scoped
+   so it never affects the List of Consumers report's sizing. */
+.report-page--rates .report-table { font-size: 15px; }
+.report-page--rates .report-table thead th { font-size: 15px; }
+.report-page--rates .report-table__desc { text-align: left; }
+
 .report-table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
 .report-table thead th {
   border: none; border-bottom: 1.5px solid var(--color-forest);
@@ -1089,6 +1095,7 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
 @media print {
   @page { size: A4; margin: 0; padding: 0; }
   body, .main-bg { background: #fff !important; background-image: none !important; }
+  .app-shell__body { display: block !important; padding: 0 !important; align-items: initial !important; justify-content: initial !important; }
   .bill-preview { background: #fff; padding: 0; }
   .bill-preview__stack { display: block !important; gap: 0; }
   .no-print { display: none !important; }

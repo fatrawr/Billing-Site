@@ -68,41 +68,38 @@ export default function MonthlyRatesPreview() {
         </div>
       </div>
 
-      <div className="report-page report-page--portrait">
+      <div className="report-page report-page--portrait report-page--rates">
         <table className="report-table">
           <colgroup>
             <col style={{ width: "10%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "45%" }} />
-            <col style={{ width: "25%" }} />
+            <col style={{ width: "60%" }} />
+            <col style={{ width: "30%" }} />
           </colgroup>
           <thead>
             <tr>
-              <th colSpan={4} style={{ padding: 0, border: "none", background: "transparent" }}>
+              <th colSpan={3} style={{ padding: 0, border: "none", background: "transparent" }}>
                 <div className="report-masthead">
                   <span className="report-masthead__date">{dateStr}</span>
                   <span className="report-masthead__brand">{SOCIETY_NAME}</span>
                   <span className="report-masthead__time">{timeStr}</span>
                 </div>
                 <div className="report-masthead__subtitle report-masthead__subtitle--stacked">
-                  <div className="report-masthead__subtitle-line1">Monthly Rates</div>
-                  <div className="report-masthead__subtitle-line2">of {formatMonthName(month)}</div>
+                  <div className="report-masthead__subtitle-line1">Monthly Rates Report</div>
+                  <div className="report-masthead__subtitle-line2">for: {formatMonthName(month)}</div>
                 </div>
               </th>
             </tr>
             <tr>
               <th>Sr.</th>
-              <th>Config Code</th>
-              <th>Config Description</th>
-              <th>Config Value</th>
+              <th>Description</th>
+              <th>Rates</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
               <tr key={r.configCode}>
                 <td className="report-table__sr">{i + 1}</td>
-                <td className="report-table__ref">{r.configCode}</td>
-                <td>{r.configDesc}</td>
+                <td className="report-table__desc">{r.configDesc}</td>
                 <td>{r.configValue}</td>
               </tr>
             ))}
