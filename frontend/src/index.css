@@ -774,7 +774,7 @@
 .report-summary__label { font-size: 13px; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
 .report-summary__value { font-size: 24px; font-weight: 700; color: var(--color-forest-deep); font-family: var(--font-display); }
 
-@media (max-width: 1160px) {
+@media screen and (max-width: 1160px) {
   .report-page { padding: 0 16px 16px; overflow-x: auto; }
   .report-table { font-size: 10px; min-width: 900px; table-layout: auto; }
 }
@@ -1118,4 +1118,7 @@ table.bill-history td, table.bill-charges td { border: 1px solid #ccc; padding: 
   break-before: page; break-inside: avoid; page-break-inside: avoid;
   margin-top: 20mm; padding-top: 0; border-top: none;
 }
+.report-table { min-width: 0 !important; table-layout: fixed !important; }
+  .report-page, .report-page--portrait { overflow-x: visible !important; max-width: none !important; }
+
 }
