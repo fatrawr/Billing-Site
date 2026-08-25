@@ -99,8 +99,8 @@ export default function MonthlyRatesPreview() {
                   <span className="report-masthead__time">{timeStr}</span>
                 </div>
                 <div className="report-masthead__subtitle report-masthead__subtitle--stacked">
-                  <div className="report-masthead__subtitle-line1">Monthly Rates</div>
-                  <div className="report-masthead__subtitle-line2">of {formatMonthName(month)}</div>
+                  <div className="report-masthead__subtitle-line1">Monthly Rates Reports</div>
+                  <div className="report-masthead__subtitle-line2">For: {formatMonthName(month)}</div>
                 </div>
               </th>
             </tr>
