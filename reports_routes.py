@@ -180,7 +180,7 @@ def yearly_payments_report():
             made_raw = float(made or 0)
             due_m = round(due_raw / 1_000_000, 2)
             made_m = round(made_raw / 1_000_000, 2)
-            diff_m = round((due_raw - made_raw) / 1_000_000, 2)  # from raw rupees, not the rounded millions above
+            diff_m = (due_raw - made_raw) / 1_000_000  # from raw rupees, not the rounded millions above
             rows.append({
                 "month": yyyymm,
                 "monthDisplay": _month_display(yyyymm),
