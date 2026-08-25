@@ -11,12 +11,27 @@ function formatMonthName(yyyymm) {
   return d.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 }
 
+function formatRate(configCode, value) {
+  switch (configCode) {
+    case "LP":
+      return `${value}%`;
+    case "OM":
+      return `${value}`;
+    default: // CM, SC, UR — unit rates
+      return `Rs. ${value}`;
+  }
+}
+
 export default function MonthlyRatesPreview() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const month = state?.month;
   const rows = state?.rows || [];
 
+  // Portrait override — same trick as the (landscape) consumers report:
+  // swap the default @page while this component is mounted instead of
+  // assigning a named @page, to avoid Chrome inserting a blank leading
+  // page when it switches page contexts mid-document.
   useEffect(() => {
     const style = document.createElement("style");
     style.textContent = "@media print { @page { size: A4 portrait; margin: 15mm; } }";
@@ -84,8 +99,8 @@ export default function MonthlyRatesPreview() {
                   <span className="report-masthead__time">{timeStr}</span>
                 </div>
                 <div className="report-masthead__subtitle report-masthead__subtitle--stacked">
-                  <div className="report-masthead__subtitle-line1">Monthly Rates Report</div>
-                  <div className="report-masthead__subtitle-line2">for: {formatMonthName(month)}</div>
+                  <div className="report-masthead__subtitle-line1">Monthly Rates</div>
+                  <div className="report-masthead__subtitle-line2">of {formatMonthName(month)}</div>
                 </div>
               </th>
             </tr>
@@ -100,7 +115,7 @@ export default function MonthlyRatesPreview() {
               <tr key={r.configCode}>
                 <td className="report-table__sr">{i + 1}</td>
                 <td className="report-table__desc">{r.configDesc}</td>
-                <td>{r.configValue}</td>
+                <td>{formatRate(r.configCode, r.configValue)}</td>
               </tr>
             ))}
           </tbody>

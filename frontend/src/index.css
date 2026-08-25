@@ -748,8 +748,8 @@
 .report-masthead__subtitle--stacked {
   display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0 8px;
 }
-.report-masthead__subtitle-line1 { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-ink); }
-.report-masthead__subtitle-line2 { font-size: 12px; color: var(--color-ink-soft); }
+.report-masthead__subtitle-line1 { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--color-ink); }
+.report-masthead__subtitle-line2 { font-size: 13px; color: var(--color-ink-soft); }
 .report-page--portrait { max-width: 720px; }
 
 /* Yearly Payments Report — two-line column headers (label + smaller
@@ -762,6 +762,9 @@
 .report-page--rates .report-table { font-size: 15px; }
 .report-page--rates .report-table thead th { font-size: 15px; }
 .report-page--rates .report-table__desc { text-align: left; }
+.report-page--rates .report-table thead th:nth-child(2) { text-align: left; }
+
+.report-page--portrait.report-page--rates { max-width: 860px; }
 
 .report-table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
 .report-table thead th {
@@ -771,7 +774,7 @@
 }
 .report-table tbody td {
   padding: 3px 6px; text-align: center; vertical-align: middle; border: none;
-  font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .report-table__record:nth-of-type(even) td { background: #f5f7f4; }
 .report-table__meter-row td { color: var(--color-ink-soft); font-size: 10.5px; padding-top: 1px; padding-bottom: 5px; }

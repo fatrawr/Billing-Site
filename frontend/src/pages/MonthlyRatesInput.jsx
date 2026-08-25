@@ -47,7 +47,7 @@ export default function MonthlyRatesInput() {
             {loading ? "Generating…" : "Generate Report"}&nbsp;<ArrowRight size={15} style={{ verticalAlign: -2 }} />
           </button>
           <button type="button" className="btn btn-secondary btn-exit" onClick={() => navigate("/menu/reports")}>
-            Back
+            Back&nbsp;&nbsp;<span className="btn-exit__key">F10</span>
           </button>
         </div>
       </form>
