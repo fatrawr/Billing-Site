@@ -85,4 +85,9 @@ bulkSaveConfig: (payload) => request("/config/bulk-save", { method: "POST", body
     const qs = new URLSearchParams(params).toString();
     return request(`/reports/consumers?${qs}`);
   },
+
+    getYearlyPaymentsReport: (params) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/reports/yearly-payments?${qs}`);
+  },
 };

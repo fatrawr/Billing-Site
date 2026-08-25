@@ -752,6 +752,11 @@
 .report-masthead__subtitle-line2 { font-size: 12px; color: var(--color-ink-soft); }
 .report-page--portrait { max-width: 720px; }
 
+/* Yearly Payments Report — two-line column headers (label + smaller
+   "(in million Rs.)" subheading) for the Payment Due / Payment columns. */
+.report-table__col-head { font-size: 12px; font-weight: 700; }
+.report-table__col-subhead { font-size: 9px; font-weight: 500; color: var(--color-ink-soft); margin-top: 1px; }
+
 /* Monthly Rates only — bigger type + left-aligned description, scoped
    so it never affects the List of Consumers report's sizing. */
 .report-page--rates .report-table { font-size: 15px; }

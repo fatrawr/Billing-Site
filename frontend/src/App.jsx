@@ -25,6 +25,9 @@ import ReportsMenu from "./pages/ReportsMenu.jsx";
 import ConsumersReportPreview from "./pages/ConsumersReportPreview.jsx";
 import MonthlyRatesInput from "./pages/MonthlyRatesInput.jsx";
 import MonthlyRatesPreview from "./pages/MonthlyRatesPreview.jsx";
+import YearlyPaymentsInput from "./pages/YearlyPaymentsInput.jsx";
+import YearlyPaymentsPreview from "./pages/YearlyPaymentsPreview.jsx";
+
 
 const PAGE_TITLES = {
   "/": "",
@@ -50,6 +53,9 @@ const PAGE_TITLES = {
   "/menu/reports/consumers/preview": "List of Consumers",
   "/menu/reports/monthly-rates": "Monthly Rates",
   "/menu/reports/monthly-rates/preview": "Monthly Rates",
+  "/menu/reports/yearly-payments": "Yearly Payments Report",
+  "/menu/reports/yearly-payments/preview": "Yearly Payments Report",
+
 };
 
 
@@ -95,7 +101,10 @@ export default function App() {
             <Route path="menu/reports/consumers" element={<ConsumersReportPreview />} />
             <Route path="menu/reports/monthly-rates" element={<MonthlyRatesInput />} />
             <Route path="menu/reports/monthly-rates/preview" element={<MonthlyRatesPreview />} />
-          
+            <Route path="menu/reports/yearly-payments" element={<YearlyPaymentsInput />} />
+            <Route path="menu/reports/yearly-payments/preview" element={<YearlyPaymentsPreview />} />
+
+
         </Routes>
       
       </Shell>

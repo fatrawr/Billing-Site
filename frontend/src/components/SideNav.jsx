@@ -41,6 +41,7 @@ const NAV_TREE = [
     children: [
       { name: "List of Consumers", to: "/menu/reports/consumers" },
       { name: "Monthly Rates", to: "/menu/reports/monthly-rates" },
+      { name: "Yearly Payments Report", to: "/menu/reports/yearly-payments" },
     ],
   },
 ];
