@@ -2,4 +2,5 @@
 /bin
 /Migrations
 /obj
+/api
 .env
