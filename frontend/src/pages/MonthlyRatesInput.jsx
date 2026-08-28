@@ -29,6 +29,17 @@ export default function MonthlyRatesInput() {
     } finally {
       setLoading(false);
     }
+
+    useEffect(() => {
+  
+          if (e.key === "F10" || e.key === "Escape") {
+            e.preventDefault();
+            navigate("/menu/reports");
+          }
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+      }, [navigate]);
+
   };
 
   return (
