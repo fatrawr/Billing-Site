@@ -16,9 +16,9 @@ function formatRate(configCode, value) {
     case "LP":
       return `${value}%`;
     case "OM":
-      return `${value}`;
+      return `${value}*`;
     default: // CM, SC, UR — unit rates
-      return `Rs. ${value}`;
+      return `${value}`;
   }
 }
 
@@ -107,7 +107,10 @@ export default function MonthlyRatesPreview() {
             <tr>
               <th>Sr.</th>
               <th>Description</th>
-              <th>Rates</th>
+              <th>
+                <div className="report-table__col-head">Rates</div>
+                <div className="report-table__col-subhead">(in Rs.)</div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -120,6 +123,10 @@ export default function MonthlyRatesPreview() {
             ))}
           </tbody>
         </table>
+
+        <p className="report-footnote">
+          * indicates that this number will be multiplied by the number of units consumed
+        </p>
       </div>
     </div>
   );

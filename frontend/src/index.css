@@ -781,6 +781,23 @@
 .report-table__record tr:first-child td { padding-top: 5px; }
 .report-table__sr, .report-table__ref { font-weight: 600; }
 
+
+/* Sits in normal flow directly under the table, left-aligned — distinct
+   from .report-masthead__subtitle-footnote, which is absolutely
+   positioned for use inside the masthead row instead. */
+.report-footnote {
+  margin: 8px 0 0;
+  text-align: left;
+  font-size: 10px;
+  color: var(--color-ink-soft);
+}
+
+/* Left-align data columns for Monthly Rates and Yearly Payments only. */
+.report-page--rates .report-table tbody td { text-align: left; }
+.report-page--payments .report-table tbody td { text-align: left; }
+
+
+
 .report-summary { margin-top: 32px; padding-top: 24px; border-top: 1.5px solid var(--color-forest); text-align: center; }
 .report-summary__title { font-family: var(--font-display); font-size: 30px; font-weight: 800; margin: 0 0 24px; color: var(--color-forest-deep); letter-spacing: 0.01em; }
 .report-summary__list { display: inline-flex; flex-direction: column; gap: 14px; text-align: left; min-width: 300px; }

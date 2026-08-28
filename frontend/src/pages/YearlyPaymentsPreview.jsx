@@ -92,9 +92,12 @@ export default function YearlyPaymentsPreview() {
               </th>
               <th>
                 <div className="report-table__col-head">Payment</div>
-                <div className="report-table__col-subhead">(in million Rs.)</div>
+                <div className="report-table__col-subhead">(in million Rs.)</div>                
               </th>
-              <th>Difference/Arrear</th>
+              <th>
+                <div className="report-table__col-head">Difference/Arrear</div>
+                <div className="report-table__col-subhead">(in Rs.)</div> 
+              </th>             
             </tr>
           </thead>
           <tbody>
@@ -104,7 +107,7 @@ export default function YearlyPaymentsPreview() {
                 <td>{r.monthDisplay}</td>
                 <td>{r.due.toFixed(2)}</td>
                 <td>{r.made.toFixed(2)}</td>
-                <td>{r.diff.toFixed(2)}</td>
+                <td>{r.diff}</td>
               </tr>
             ))}
           </tbody>
